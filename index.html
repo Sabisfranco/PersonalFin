@@ -57,12 +57,14 @@ button{border:0;border-radius:11px;padding:10px 13px;background:var(--wine);colo
 .pill{display:inline-block;padding:3px 7px;border-radius:99px;background:#f0e5e9;color:var(--wine);font-size:10px;font-weight:700}
 .dangerText{color:var(--red)}
 .successText{color:var(--green)}
+
 @media(max-width:760px){
 .grid,.kpis{grid-template-columns:repeat(2,1fr)}
 .form{grid-template-columns:1fr 1fr}
 .tabs{top:62px}
 .big{font-size:19px}
 }
+
 @media(max-width:480px){
 .form{grid-template-columns:1fr}
 .form .full{grid-column:auto}
@@ -139,20 +141,49 @@ let tab='painel';
 
 
 /* =========================
-   SALVAR
+   SALVAR SEM PERDER POSIÇÃO
    ========================= */
-
-/*
-Mantém a posição horizontal das tabelas depois do render.
-Assim, se você estiver em Outubro e lançar um valor,
-a tabela continua exatamente em Outubro.
-*/
 
 function save(){
 
-const scrollPositions=[
-...document.querySelectorAll('.tablewrap')
-].map(el=>el.scrollLeft);
+/*
+Guarda a posição horizontal das tabelas.
+Além do scrollLeft, guardamos qual mês estava
+mais próximo da parte visível da tela.
+*/
+
+const tableStates=[...document.querySelectorAll('.tablewrap')].map(el=>{
+
+const table=el.querySelector('table');
+
+if(!table){
+return {
+scrollLeft:el.scrollLeft
+};
+}
+
+const cells=table.querySelectorAll('thead tr:first-child th');
+
+let monthIndex=0;
+
+if(cells.length>1){
+
+const firstCellWidth=cells[0].getBoundingClientRect().width;
+
+const approxIndex=Math.round(
+(el.scrollLeft-firstCellWidth)/99
+);
+
+monthIndex=Math.max(0,Math.min(11,approxIndex));
+
+}
+
+return {
+scrollLeft:el.scrollLeft,
+monthIndex:monthIndex
+};
+
+});
 
 localStorage.setItem(
 'personalfin_complete_v1',
@@ -160,6 +191,12 @@ JSON.stringify(db)
 );
 
 render();
+
+
+/*
+Depois que o HTML novo foi criado,
+restaura a posição horizontal.
+*/
 
 requestAnimationFrame(()=>{
 
@@ -169,9 +206,33 @@ const tables=[
 
 tables.forEach((el,i)=>{
 
-if(scrollPositions[i]!==undefined){
-el.scrollLeft=scrollPositions[i];
-}
+const state=tableStates[i];
+
+if(!state)return;
+
+/*
+Primeiro tenta restaurar exatamente o scroll.
+*/
+
+el.scrollLeft=state.scrollLeft;
+
+/*
+No iPhone, às vezes o Safari recalcula o scroll
+depois do primeiro frame. Por isso fazemos
+uma segunda restauração.
+*/
+
+setTimeout(()=>{
+
+el.scrollLeft=state.scrollLeft;
+
+},50);
+
+setTimeout(()=>{
+
+el.scrollLeft=state.scrollLeft;
+
+},150);
 
 });
 
@@ -188,6 +249,7 @@ function ym(){
 return db.year+'-'+String(db.month+1).padStart(2,'0')
 }
 
+
 function monthNav(){
 
 return `<div class="monthbar">
@@ -201,6 +263,7 @@ return `<div class="monthbar">
 </div>`
 
 }
+
 
 function moveMonth(x){
 
@@ -234,9 +297,7 @@ let a=[
 ];
 
 document.getElementById('tabs').innerHTML=
-a.map(x=>
-`<button class="tab ${tab===x[0]?'active':''}" onclick="tab='${x[0]}';render()">${x[1]}</button>`
-).join('')
+a.map(x=>`<button class="tab ${tab===x[0]?'active':''}" onclick="tab='${x[0]}';render()">${x[1]}</button>`).join('')
 
 }
 
@@ -276,6 +337,7 @@ return db.recurring
 
 }
 
+
 function cardTotal(which){
 
 return db.cards[which]
@@ -283,6 +345,7 @@ return db.cards[which]
 .reduce((s,e)=>s+n(e.value),0)
 
 }
+
 
 function cardAll(which){
 
@@ -292,6 +355,7 @@ return db.cards[which]
 
 }
 
+
 function investments(){
 
 return db.entries
@@ -300,6 +364,7 @@ return db.entries
 
 }
 
+
 function reserve(){
 
 return db.entries
@@ -307,6 +372,7 @@ return db.entries
 .reduce((s,e)=>s+n(e.amount),0)
 
 }
+
 
 function totalOut(){
 
@@ -441,10 +507,12 @@ return monthNav()+`
 <div class="card rows">
 
 ${dist.map(x=>`
+
 <div class="row">
 <span>${x[0]}</span>
 <b>${money(x[1])}</b>
 </div>
+
 `).join('')||'<div class="note">Nenhuma saída registrada.</div>'}
 
 </div>
@@ -467,9 +535,11 @@ Recorrentes é apenas cadastro de referência e não é somado duas vezes.
 
 }
 
+
 function averageFixed(){
 return pixFixed()
 }
+
 
 function reserveAccum(){
 
@@ -786,20 +856,17 @@ return db.inputValues?.[k]??''
 
 }
 
+
 function setInput(type,i,j,v){
 
 db.inputValues=db.inputValues||{};
 
 db.inputValues[type+'_'+i+'_'+j]=n(v);
 
-/*
-O save() agora preserva automaticamente
-a posição horizontal da tabela.
-*/
-
 save()
 
 }
+
 
 function sumInputs(type,j){
 
@@ -927,7 +994,6 @@ return monthNav()+`
 <label>Categoria</label>
 
 <select id="ec">
-
 <option>Outros</option>
 <option>Alimentação</option>
 <option>Moradia</option>
@@ -937,36 +1003,27 @@ return monthNav()+`
 <option>Profissional</option>
 <option>Investimentos</option>
 <option>Reserva de emergência</option>
-
 </select>
 
 </div>
 
 <div>
-
 <label>Forma</label>
 
 <select id="ef">
-
 <option>Pix</option>
 <option>Dinheiro</option>
-
 </select>
 
 </div>
 
 <div>
-
 <label>Descrição</label>
-
 <input id="ed" required>
-
 </div>
 
 <div class="full">
-
 <button>Adicionar saída</button>
-
 </div>
 
 </form>
@@ -1025,6 +1082,7 @@ onclick="removeEntry('${e.id}')"
 `
 
 }
+
 
 function addEntry(ev,type){
 
@@ -1096,43 +1154,29 @@ O app distribui automaticamente a parcela nos meses seguintes.
 <form class="form" onsubmit="addCard(event,'${which}')">
 
 <div>
-
 <label>Descrição</label>
-
 <input id="cd" required>
-
 </div>
 
 <div>
-
 <label>Valor total da compra</label>
-
 <input id="cv" type="number" step="0.01" required>
-
 </div>
 
 <div>
-
 <label>Parcelas</label>
-
 <input id="cn" type="number" min="1" max="60" value="1" required>
-
 </div>
 
 <div>
-
 <label>Mês inicial</label>
-
 <input id="cm" type="month" value="${ym()}" required>
-
 </div>
 
 <div>
-
 <label>Categoria</label>
 
 <select id="cc">
-
 <option>Casa</option>
 <option>Alimentação</option>
 <option>Transporte</option>
@@ -1140,7 +1184,6 @@ O app distribui automaticamente a parcela nos meses seguintes.
 <option>Saúde</option>
 <option>Profissional</option>
 <option>Outros</option>
-
 </select>
 
 </div>
@@ -1219,6 +1262,7 @@ ${money(cardAll(which))}
 `
 
 }
+
 
 function addCard(ev,which){
 
@@ -1300,11 +1344,9 @@ ou transformado em uma compra/recorrência conforme o caso.
 <label>Categoria</label>
 
 <select id="rc">
-
 <option>Gastos fixos</option>
 <option>Cartão Casa</option>
 <option>Cartão Pessoal</option>
-
 </select>
 
 </div>
@@ -1312,7 +1354,6 @@ ou transformado em uma compra/recorrência conforme o caso.
 <div>
 
 <label>Descrição</label>
-
 <input id="rd" required>
 
 </div>
@@ -1322,11 +1363,9 @@ ou transformado em uma compra/recorrência conforme o caso.
 <label>Forma</label>
 
 <select id="rf">
-
 <option>Pix</option>
 <option>Cartão Casa</option>
 <option>Cartão Pessoal</option>
-
 </select>
 
 </div>
@@ -1334,7 +1373,6 @@ ou transformado em uma compra/recorrência conforme o caso.
 <div>
 
 <label>Valor mensal</label>
-
 <input id="rv" type="number" step="0.01" required>
 
 </div>
@@ -1344,10 +1382,8 @@ ou transformado em uma compra/recorrência conforme o caso.
 <label>Contar automaticamente?</label>
 
 <select id="ra">
-
 <option>Não</option>
 <option>Sim</option>
-
 </select>
 
 </div>
@@ -1427,6 +1463,7 @@ Excluir
 `
 
 }
+
 
 function addRec(ev){
 
@@ -1586,9 +1623,14 @@ A reserva é lançada manualmente e não deve ser duplicada pelo cadastro de rec
 
 }
 
+
 function addReserve(ev){
 
 ev.preventDefault();
+
+const valor=n(
+document.getElementById('rr').value
+);
 
 db.entries.push({
 
@@ -1598,9 +1640,7 @@ ym:ym(),
 
 type:'saida',
 
-amount:n(
-document.getElementById('rr').value
-),
+amount:valor,
 
 category:'Reserva de emergência',
 
@@ -1628,6 +1668,7 @@ e=>String(e.id)!==String(x)
 save()
 
 }
+
 
 function removeCard(w,x){
 
