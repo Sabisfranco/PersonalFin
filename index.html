@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#111111">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
 <title>PersonalFin</title>
 
 <style>
@@ -16,7 +17,6 @@
   --muted:#777;
   --line:#e5e5e5;
   --wine:#7b2435;
-  --wine2:#9b3046;
   --green:#237a45;
   --red:#b42318;
   --shadow:0 2px 12px rgba(0,0,0,.06);
@@ -59,7 +59,7 @@ main{
 }
 
 section{
-  margin-bottom:24px;
+  margin-bottom:25px;
 }
 
 .title{
@@ -68,8 +68,8 @@ section{
 }
 
 .card{
-  background:var(--card);
-  border-radius:var(--radius);
+  background:#fff;
+  border-radius:14px;
   box-shadow:var(--shadow);
   padding:15px;
   margin-bottom:12px;
@@ -120,7 +120,6 @@ section{
 .metaTop{
   display:flex;
   justify-content:space-between;
-  gap:10px;
   align-items:center;
   margin-bottom:9px;
 }
@@ -136,7 +135,6 @@ section{
   display:block;
   height:100%;
   background:var(--wine);
-  border-radius:20px;
 }
 
 .note{
@@ -207,22 +205,10 @@ button.danger{
   align-items:center;
   justify-content:space-between;
   gap:10px;
-  margin-bottom:12px;
 }
 
 .monthbar strong{
   font-size:17px;
-}
-
-.monthButtons{
-  display:flex;
-  gap:6px;
-}
-
-.monthButtons button{
-  padding:7px 10px;
-  background:#eee;
-  color:#222;
 }
 
 .tablewrap{
@@ -317,28 +303,6 @@ td input{
   color:var(--muted);
   margin-top:3px;
 }
-
-.tabs{
-  display:flex;
-  gap:8px;
-  margin-bottom:15px;
-  overflow-x:auto;
-}
-
-.tabs button{
-  background:#eee;
-  color:#333;
-  white-space:nowrap;
-}
-
-.tabs button.active{
-  background:var(--wine);
-  color:#fff;
-}
-
-.hidden{
-  display:none!important;
-}
 </style>
 </head>
 
@@ -353,20 +317,23 @@ td input{
 
 <!-- ================= PAINEL ================= -->
 
-<section id="painel">
+<section>
   <h2 class="title">Painel Financeiro</h2>
 
   <div class="grid" id="metrics"></div>
 
   <div class="grid" style="margin-top:12px">
+
     <div class="metaBox">
       <div class="metaTop">
         <strong>Personal</strong>
         <span id="personalMeta"></span>
       </div>
+
       <div class="progress">
         <span id="personalProgress"></span>
       </div>
+
       <div class="note" style="margin-top:7px">
         Meta atual: 14 alunas — sem limite de cadastro.
       </div>
@@ -377,395 +344,643 @@ td input{
         <strong>Consultoria online</strong>
         <span id="consultoriaMeta"></span>
       </div>
+
       <div class="progress">
         <span id="consultoriaProgress"></span>
       </div>
+
       <div class="note" style="margin-top:7px">
         Meta atual: 20 alunos — sem limite de cadastro.
       </div>
     </div>
+
   </div>
 </section>
+
 
 <!-- ================= ENTRADAS ================= -->
 
-<section id="entradas">
-  <h2 class="title">Entradas</h2>
+<section>
 
-  <div class="card">
-    <div class="monthbar">
-      <button class="secondary" onclick="changeMonth(-1)">‹</button>
-      <strong id="monthTitle"></strong>
-      <button class="secondary" onclick="changeMonth(1)">›</button>
-    </div>
+<h2 class="title">Entradas</h2>
+
+<div class="card">
+  <div class="monthbar">
+
+    <button class="secondary" onclick="changeMonth(-1)">
+      ‹
+    </button>
+
+    <strong id="monthTitle"></strong>
+
+    <button class="secondary" onclick="changeMonth(1)">
+      ›
+    </button>
+
+  </div>
+</div>
+
+
+<div id="studentSections"></div>
+
+
+<!-- APLICATIVO -->
+
+<div class="card">
+
+  <h3 style="margin-top:0">
+    Aplicativo
+  </h3>
+
+  <label>
+    Valor recebido no mês
+  </label>
+
+  <input
+    id="appValue"
+    type="number"
+    step="0.01"
+    min="0"
+    oninput="setApp(this.value)"
+  >
+
+</div>
+
+
+<!-- ENTRADAS EXTRAS -->
+
+<h3>Entradas Extras</h3>
+
+<div class="card">
+
+<form onsubmit="addExtra(event)" class="form">
+
+  <div>
+    <label>Data</label>
+    <input id="xd" type="date" required>
   </div>
 
-  <div id="studentSections"></div>
-
-  <div class="card">
-    <h3 style="margin-top:0">Aplicativo</h3>
-
-    <div class="form">
-      <div>
-        <label>Valor recebido no mês</label>
-        <input
-          id="appValue"
-          type="number"
-          step="0.01"
-          min="0"
-          oninput="setApp(this.value)"
-        >
-      </div>
-    </div>
+  <div>
+    <label>Descrição</label>
+    <input id="xdesc" required>
   </div>
 
-  <h3 style="margin-top:25px">Entradas Extras</h3>
-
-  <div class="card">
-    <form class="form" onsubmit="addExtra(event)">
-      <div>
-        <label>Data</label>
-        <input id="xd" type="date" required>
-      </div>
-
-      <div>
-        <label>Descrição</label>
-        <input id="xdesc" required>
-      </div>
-
-      <div>
-        <label>Valor</label>
-        <input id="xval" type="number" step="0.01" min="0" required>
-      </div>
-
-      <div style="align-self:end">
-        <button>Adicionar entrada</button>
-      </div>
-    </form>
+  <div>
+    <label>Valor</label>
+    <input
+      id="xval"
+      type="number"
+      step="0.01"
+      min="0"
+      required
+    >
   </div>
 
-  <div class="card rows" id="extraList"></div>
+  <div style="align-self:end">
+    <button>Adicionar entrada</button>
+  </div>
+
+</form>
+
+</div>
+
+<div class="card rows" id="extraList"></div>
+
 </section>
+
 
 <!-- ================= SAÍDAS ================= -->
 
-<section id="saidas">
-  <h2 class="title">Saídas</h2>
+<section>
 
-  <div class="card">
-    <form class="form" onsubmit="addExpense(event)">
-      <div>
-        <label>Data</label>
-        <input id="ed" type="date" required>
-      </div>
+<h2 class="title">Saídas</h2>
 
-      <div>
-        <label>Descrição</label>
-        <input id="edesc" required>
-      </div>
+<div class="card">
 
-      <div>
-        <label>Valor</label>
-        <input id="eval" type="number" step="0.01" min="0" required>
-      </div>
+<form onsubmit="addExpense(event)" class="form">
 
-      <div>
-        <label>Categoria</label>
-        <select id="ecat">
-          <option>Gastos fixos</option>
-          <option>Investimentos</option>
-          <option>Reserva</option>
-          <option>Outros</option>
-        </select>
-      </div>
-
-      <div class="full">
-        <button>Adicionar saída</button>
-      </div>
-    </form>
+  <div>
+    <label>Data</label>
+    <input id="ed" type="date" required>
   </div>
 
-  <div class="card rows" id="expenseList"></div>
+  <div>
+    <label>Descrição</label>
+    <input id="edesc" required>
+  </div>
+
+  <div>
+    <label>Valor</label>
+    <input
+      id="eval"
+      type="number"
+      step="0.01"
+      min="0"
+      required
+    >
+  </div>
+
+  <div>
+    <label>Categoria</label>
+
+    <select id="ecat">
+      <option>Gastos fixos</option>
+      <option>Investimentos</option>
+      <option>Reserva de emergência</option>
+      <option>Outros</option>
+    </select>
+  </div>
+
+  <div>
+    <label>Forma</label>
+
+    <select id="eform">
+      <option>Pix</option>
+      <option>Dinheiro</option>
+    </select>
+  </div>
+
+  <div style="align-self:end">
+    <button>Adicionar saída</button>
+  </div>
+
+</form>
+
+</div>
+
+<div class="card rows" id="expenseList"></div>
+
 </section>
+
 
 <!-- ================= CARTÃO CASA ================= -->
 
-<section id="cartaoCasa">
-  <h2 class="title">Cartão Casa</h2>
+<section>
 
-  <div class="card">
-    <form class="form" onsubmit="addCard(event,'casa')">
-      <div>
-        <label>Descrição</label>
-        <input id="ccdesc" required>
-      </div>
+<h2 class="title">Cartão Casa</h2>
 
-      <div>
-        <label>Valor da parcela</label>
-        <input id="ccval" type="number" step="0.01" min="0" required>
-      </div>
+<div class="card">
 
-      <div>
-        <label>Primeiro mês</label>
-        <input id="ccmonth" type="month" required>
-      </div>
+<form onsubmit="addCard(event,'casa')" class="form">
 
-      <div>
-        <label>Nº de parcelas</label>
-        <input id="ccparcelas" type="number" min="1" value="1" required>
-      </div>
-
-      <div class="full">
-        <button>Adicionar compra</button>
-      </div>
-    </form>
+  <div>
+    <label>Descrição</label>
+    <input id="ccdesc" required>
   </div>
 
-  <div class="card rows" id="cardCasaList"></div>
+  <div>
+    <label>Valor da parcela</label>
+    <input id="ccval" type="number" step="0.01" min="0" required>
+  </div>
+
+  <div>
+    <label>Primeiro mês</label>
+    <input id="ccmonth" type="month" required>
+  </div>
+
+  <div>
+    <label>Nº de parcelas</label>
+    <input id="ccparcelas" type="number" min="1" value="1" required>
+  </div>
+
+  <div style="align-self:end">
+    <button>Adicionar compra</button>
+  </div>
+
+</form>
+
+</div>
+
+<div class="card rows" id="cardCasaList"></div>
+
 </section>
+
 
 <!-- ================= CARTÃO PESSOAL ================= -->
 
-<section id="cartaoPessoal">
-  <h2 class="title">Cartão Pessoal</h2>
+<section>
 
-  <div class="card">
-    <form class="form" onsubmit="addCard(event,'pessoal')">
-      <div>
-        <label>Descrição</label>
-        <input id="cpdesc" required>
-      </div>
+<h2 class="title">Cartão Pessoal</h2>
 
-      <div>
-        <label>Valor da parcela</label>
-        <input id="cpval" type="number" step="0.01" min="0" required>
-      </div>
+<div class="card">
 
-      <div>
-        <label>Primeiro mês</label>
-        <input id="cpmonth" type="month" required>
-      </div>
+<form onsubmit="addCard(event,'pessoal')" class="form">
 
-      <div>
-        <label>Nº de parcelas</label>
-        <input id="cpparcelas" type="number" min="1" value="1" required>
-      </div>
-
-      <div class="full">
-        <button>Adicionar compra</button>
-      </div>
-    </form>
+  <div>
+    <label>Descrição</label>
+    <input id="cpdesc" required>
   </div>
 
-  <div class="card rows" id="cardPessoalList"></div>
+  <div>
+    <label>Valor da parcela</label>
+    <input id="cpval" type="number" step="0.01" min="0" required>
+  </div>
+
+  <div>
+    <label>Primeiro mês</label>
+    <input id="cpmonth" type="month" required>
+  </div>
+
+  <div>
+    <label>Nº de parcelas</label>
+    <input id="cpparcelas" type="number" min="1" value="1" required>
+  </div>
+
+  <div style="align-self:end">
+    <button>Adicionar compra</button>
+  </div>
+
+</form>
+
+</div>
+
+<div class="card rows" id="cardPessoalList"></div>
+
 </section>
+
 
 <!-- ================= RECORRENTES ================= -->
 
-<section id="recorrentes">
-  <h2 class="title">Recorrentes</h2>
+<section>
 
-  <div class="card">
-    <form class="form" onsubmit="addRecurring(event)">
-      <div>
-        <label>Descrição</label>
-        <input id="rdesc" required>
-      </div>
+<h2 class="title">Recorrentes</h2>
 
-      <div>
-        <label>Valor</label>
-        <input id="rval" type="number" step="0.01" min="0" required>
-      </div>
+<div class="card">
 
-      <div>
-        <label>Categoria</label>
-        <select id="rcat">
-          <option>Gastos fixos</option>
-          <option>Cartão Casa</option>
-          <option>Cartão Pessoal</option>
-        </select>
-      </div>
+<form onsubmit="addRecurring(event)" class="form">
 
-      <div style="align-self:end">
-        <button>Adicionar recorrente</button>
-      </div>
-    </form>
+  <div>
+    <label>Descrição</label>
+    <input id="rdesc" required>
   </div>
 
-  <div class="card rows" id="recurringList"></div>
+  <div>
+    <label>Valor mensal</label>
+    <input id="rval" type="number" step="0.01" min="0" required>
+  </div>
+
+  <div>
+    <label>Categoria</label>
+
+    <select id="rcat">
+      <option>Gastos fixos</option>
+      <option>Cartão Casa</option>
+      <option>Cartão Pessoal</option>
+    </select>
+  </div>
+
+  <div style="align-self:end">
+    <button>Adicionar recorrente</button>
+  </div>
+
+</form>
+
+</div>
+
+<div class="card rows" id="recurringList"></div>
+
 </section>
+
 
 <!-- ================= RESERVA ================= -->
 
-<section id="reserva">
-  <h2 class="title">Reserva de emergência</h2>
+<section>
 
-  <div class="card">
-    <form class="form" onsubmit="addReserve(event)">
-      <div>
-        <label>Valor reservado neste mês</label>
-        <input id="rr" type="number" step="0.01" min="0" required>
-      </div>
+<h2 class="title">Reserva de emergência</h2>
 
-      <div style="align-self:end">
-        <button>Registrar reserva</button>
-      </div>
-    </form>
+<div class="card">
+
+<form onsubmit="addReserve(event)" class="form">
+
+  <div>
+    <label>Valor reservado neste mês</label>
+
+    <input
+      id="rr"
+      type="number"
+      step="0.01"
+      min="0"
+      required
+    >
   </div>
 
-  <div class="card rows" id="reserveList"></div>
+  <div style="align-self:end">
+    <button>Registrar reserva</button>
+  </div>
+
+</form>
+
+</div>
+
+<div class="card">
+  <strong>Total acumulado:</strong>
+  <span id="reserveTotal"></span>
+</div>
+
 </section>
 
 </main>
 
+
 <script>
 
 /* =========================================================
-   BANCO DE DADOS
+   CONFIGURAÇÃO
 ========================================================= */
 
-const KEY='personalfin_complete_v1';
+const STORAGE_KEY = "personalfin_complete_v1";
 
-function defaultDB(){
+const months = [
+  "Jan","Fev","Mar","Abr","Mai","Jun",
+  "Jul","Ago","Set","Out","Nov","Dez"
+];
+
+const now = new Date();
+
+let db = loadDatabase();
+
+let currentMonthIndex =
+  Number.isInteger(db.monthIndex)
+  ? db.monthIndex
+  : now.getMonth();
+
+let currentYear =
+  Number.isInteger(db.year)
+  ? db.year
+  : now.getFullYear();
+
+
+/* =========================================================
+   UTILIDADES
+========================================================= */
+
+function n(v){
+  const x = Number(v);
+  return Number.isFinite(x) ? x : 0;
+}
+
+function money(v){
+  return n(v).toLocaleString("pt-BR",{
+    style:"currency",
+    currency:"BRL"
+  });
+}
+
+function id(){
+  return Date.now().toString(36) +
+         Math.random().toString(36).slice(2);
+}
+
+function ym(){
+  return currentYear + "-" +
+    String(currentMonthIndex + 1).padStart(2,"0");
+}
+
+
+/* =========================================================
+   BANCO
+========================================================= */
+
+function emptyStudents(){
+
   return {
-    month:new Date().toISOString().slice(0,7),
+    personal:[],
+    consultoria:[]
+  };
 
-    inputs:{
-      personal:[
-        'Juliana',
-        'João',
-        'Rafa',
-        'Pri e Isa',
-        'Neuza',
-        'Dani',
-        'Giovanna',
-        'Ana Velasco',
-        'Luís Lunguinho'
-      ],
-      consultoria:[],
-      app:{}
-    },
+}
 
-    inputValues:{},
+
+function makeStudent(name){
+
+  return {
+    id:id(),
+    name:name,
+    values:Array(12).fill(0)
+  };
+
+}
+
+
+function defaultDatabase(){
+
+  return {
+
+    monthIndex:now.getMonth(),
+
+    year:now.getFullYear(),
 
     students:{
-      personal:[],
-      consultoria:[]
+      personal:[
+        "Juliana",
+        "João",
+        "Rafa",
+        "Pri e Isa",
+        "Neuza",
+        "Dani",
+        "Giovanna",
+        "Ana Velasco",
+        "Luís Lunguinho"
+      ].map(makeStudent),
+
+      consultoria:[].map(makeStudent)
     },
 
-    studentValues:{},
+    app:{},
 
     entries:[],
-    expenses:[],
+
     cards:{
       casa:[],
       pessoal:[]
     },
 
     recurring:[],
+
     reserve:[]
-  };
-}
 
-let db=JSON.parse(localStorage.getItem(KEY)||'null')||defaultDB();
-
-/* =========================================================
-   UTILITÁRIOS
-========================================================= */
-
-function n(v){
-  const x=parseFloat(v);
-  return Number.isFinite(x)?x:0;
-}
-
-function money(v){
-  return n(v).toLocaleString('pt-BR',{
-    style:'currency',
-    currency:'BRL'
-  });
-}
-
-function id(){
-  return Date.now().toString(36)+Math.random().toString(36).slice(2,8);
-}
-
-function ym(){
-  return db.month;
-}
-
-function monthLabel(m){
-  const [y,mo]=m.split('-');
-  return new Date(Number(y),Number(mo)-1,1)
-    .toLocaleDateString('pt-BR',{
-      month:'long',
-      year:'numeric'
-    });
-}
-
-/* =========================================================
-   MIGRAÇÃO DOS ALUNOS EXISTENTES
-========================================================= */
-
-function migrateStudents(){
-
-  db.students=db.students||{
-    personal:[],
-    consultoria:[]
   };
 
-  db.studentValues=db.studentValues||{};
+}
 
-  ['personal','consultoria'].forEach(type=>{
 
-    if(!Array.isArray(db.students[type])){
-      db.students[type]=[];
+/* =========================================================
+   MIGRAÇÃO
+========================================================= */
+
+function migrate(old){
+
+  const base = defaultDatabase();
+
+  if(!old || typeof old !== "object"){
+    return base;
+  }
+
+  /* mantém dados gerais */
+
+  if(old.entries){
+    base.entries = old.entries;
+  }
+
+  if(old.cards){
+    base.cards = {
+      casa:Array.isArray(old.cards.casa)
+        ? old.cards.casa : [],
+      pessoal:Array.isArray(old.cards.pessoal)
+        ? old.cards.pessoal : []
+    };
+  }
+
+  if(old.recurring){
+    base.recurring = old.recurring;
+  }
+
+  if(old.reserve){
+    base.reserve = old.reserve;
+  }
+
+  if(old.app){
+
+    if(typeof old.app === "object"){
+      base.app = old.app;
     }
 
-    /*
-      Se ainda não existem alunos cadastrados na nova estrutura,
-      transforma os nomes antigos em alunos.
-    */
+  }
 
-    if(db.students[type].length===0){
+  /* mês */
 
-      const oldNames=Array.isArray(db.inputs?.[type])
-        ? db.inputs[type]
-        : [];
+  if(Number.isInteger(old.monthIndex)){
+    base.monthIndex = old.monthIndex;
+  }
 
-      db.students[type]=oldNames.map((name,i)=>({
-        id:'legacy_'+type+'_'+i,
-        name:String(name),
-        active:true
+  if(Number.isInteger(old.year)){
+    base.year = old.year;
+  }
+
+  /* =====================================================
+     NOVO FORMATO DE ALUNOS
+  ===================================================== */
+
+  if(
+    old.students &&
+    Array.isArray(old.students.personal)
+  ){
+
+    base.students.personal =
+      old.students.personal.map(s => ({
+        id:s.id || id(),
+        name:s.name || "Sem nome",
+        values:Array.isArray(s.values)
+          ? [...s.values,...Array(12)].slice(0,12).map(n)
+          : Array(12).fill(0)
       }));
-    }
 
-    /*
-      Migra os valores antigos para a estrutura nova.
-    */
+  }
 
-    db.students[type].forEach((student,i)=>{
 
-      for(let j=0;j<12;j++){
+  if(
+    old.students &&
+    Array.isArray(old.students.consultoria)
+  ){
 
-        const oldKey=type+'_'+i+'_'+j;
+    base.students.consultoria =
+      old.students.consultoria.map(s => ({
+        id:s.id || id(),
+        name:s.name || "Sem nome",
+        values:Array.isArray(s.values)
+          ? [...s.values,...Array(12)].slice(0,12).map(n)
+          : Array(12).fill(0)
+      }));
 
-        const newKey=
-          'student_'+type+'_'+student.id+'_'+j;
+  }
 
-        if(
-          db.studentValues[newKey]===undefined &&
-          db.inputValues &&
-          db.inputValues[oldKey]!==undefined
-        ){
-          db.studentValues[newKey]=
-            n(db.inputValues[oldKey]);
-        }
+
+  /* =====================================================
+     FORMATO ANTIGO:
+     db.inputs.personal
+     db.inputs.consultoria
+     db.inputValues
+  ===================================================== */
+
+  if(old.inputs){
+
+    ["personal","consultoria"].forEach(type => {
+
+      const names =
+        Array.isArray(old.inputs[type])
+          ? old.inputs[type]
+          : [];
+
+      if(names.length){
+
+        base.students[type] =
+          names.map((name,i) => {
+
+            const values =
+              Array.from({length:12},(_,j) => {
+
+                if(old.inputValues){
+
+                  return n(
+                    old.inputValues[
+                      type+"_"+i+"_"+j
+                    ]
+                  );
+
+                }
+
+                return 0;
+
+              });
+
+            return {
+              id:id(),
+              name:String(name),
+              values:values
+            };
+
+          });
+
       }
+
     });
-  });
+
+  }
+
+
+  return base;
+
 }
 
-migrateStudents();
+
+function loadDatabase(){
+
+  try{
+
+    const raw =
+      localStorage.getItem(STORAGE_KEY);
+
+    if(!raw){
+
+      return defaultDatabase();
+
+    }
+
+    const old =
+      JSON.parse(raw);
+
+    return migrate(old);
+
+  }catch(e){
+
+    console.error(e);
+
+    return defaultDatabase();
+
+  }
+
+}
+
 
 /* =========================================================
    SALVAR
@@ -773,20 +988,18 @@ migrateStudents();
 
 function save(){
 
-  /*
-    Guarda a posição horizontal das tabelas para que,
-    depois de editar um valor, o aplicativo não jogue
-    a usuária de volta para o início.
-  */
+  const positions =
+    [...document.querySelectorAll(".tablewrap")]
+      .map(el => el.scrollLeft);
 
-  const tableStates=
-    [...document.querySelectorAll('.tablewrap')]
-    .map(el=>({
-      scrollLeft:el.scrollLeft
-    }));
+  db.monthIndex =
+    currentMonthIndex;
+
+  db.year =
+    currentYear;
 
   localStorage.setItem(
-    KEY,
+    STORAGE_KEY,
     JSON.stringify(db)
   );
 
@@ -794,174 +1007,95 @@ function save(){
 
   requestAnimationFrame(()=>{
 
-    const tables=
-      [...document.querySelectorAll('.tablewrap')];
+    const tables =
+      [...document.querySelectorAll(".tablewrap")];
 
     tables.forEach((el,i)=>{
 
-      if(tableStates[i]){
+      if(positions[i] !== undefined){
 
-        el.scrollLeft=
-          tableStates[i].scrollLeft;
+        el.scrollLeft =
+          positions[i];
 
         setTimeout(()=>{
-          el.scrollLeft=
-            tableStates[i].scrollLeft;
+          el.scrollLeft =
+            positions[i];
         },50);
 
         setTimeout(()=>{
-          el.scrollLeft=
-            tableStates[i].scrollLeft;
+          el.scrollLeft =
+            positions[i];
         },150);
+
       }
+
     });
+
   });
+
 }
 
-/* =========================================================
-   MÊS
-========================================================= */
-
-function changeMonth(delta){
-
-  const [y,m]=db.month.split('-').map(Number);
-
-  const d=new Date(y,m-1+delta,1);
-
-  db.month=
-    d.toISOString().slice(0,7);
-
-  render();
-}
 
 /* =========================================================
    ALUNOS
 ========================================================= */
 
-function studentValue(type,studentId,j){
-
-  const key=
-    'student_'+type+'_'+studentId+'_'+j;
-
-  return db.studentValues?.[key]??'';
-}
-
-function setStudentInput(type,studentId,j,value){
-
-  const key=
-    'student_'+type+'_'+studentId+'_'+j;
-
-  db.studentValues[key]=value===''?'':n(value);
-
-  save();
-}
-
-function sumStudentInputs(type,j){
-
-  return db.students[type]
-    .reduce(
-      (sum,student)=>
-        sum+n(studentValue(type,student.id,j)),
-      0
-    );
-}
-
-/*
-  Adiciona aluno SEM LIMITE.
-
-  O prompt é proposital:
-  a usuária clica na única linha do final da tabela,
-  coloca o nome e pronto.
-*/
-
-function addStudentInline(type){
-
-  const label=
-    type==='personal'
-      ? 'Digite o nome da nova aluna:'
-      : 'Digite o nome do novo aluno:';
-
-  const name=prompt(label);
-
-  if(!name) return;
-
-  const clean=name.trim();
-
-  if(!clean) return;
-
-  db.students[type].push({
-    id:id(),
-    name:clean,
-    active:true
-  });
-
-  save();
-}
-
-/* =========================================================
-   TABELA DE ALUNOS
-========================================================= */
-
 function studentTable(type){
 
-  const students=db.students[type];
+  const isPersonal =
+    type === "personal";
 
-  const months=[
-    'Jan','Fev','Mar','Abr','Mai','Jun',
-    'Jul','Ago','Set','Out','Nov','Dez'
-  ];
+  const title =
+    isPersonal
+      ? "Personal"
+      : "Consultoria online";
 
-  const title=
-    type==='personal'
-      ? 'Personal'
-      : 'Consultoria online';
+  const students =
+    db.students[type] || [];
 
-  const meta=
-    type==='personal'
-      ? 'Meta atual: 14 alunas'
-      : 'Meta atual: 20 alunos';
+  let html = `
 
-  const addText=
-    type==='personal'
-      ? '＋ Adicionar nova aluna'
-      : '＋ Adicionar novo aluno';
+  <div class="card">
 
-  let html=`
+    <h3 style="margin-top:0">
+      ${title}
+    </h3>
 
-    <section>
+    <div class="tablewrap">
 
-      <h3 style="margin:0 0 10px">
-        ${title}
-      </h3>
+      <table>
 
-      <div class="note" style="margin-bottom:10px">
-        ${meta} • sem limite de cadastro
-      </div>
+        <thead>
 
-      <div class="tablewrap">
+          <tr>
 
-        <table>
+            <th>
+              ${isPersonal ? "Aluna" : "Aluno"}
+            </th>
 
-          <thead>
-            <tr>
-              <th>Aluno</th>
-              ${months.map(m=>`<th>${m}</th>`).join('')}
-            </tr>
-          </thead>
+            ${months.map(m =>
+              `<th>${m}</th>`
+            ).join("")}
 
-          <tbody>
+          </tr>
+
+        </thead>
+
+        <tbody>
   `;
 
-  students.forEach(student=>{
 
-    html+=`
+  students.forEach((student,i)=>{
+
+    html += `
+
       <tr>
 
         <td>
           <strong>${escapeHtml(student.name)}</strong>
         </td>
 
-        ${months.map((_,j)=>`
+        ${months.map((m,j)=>`
 
           <td>
 
@@ -969,29 +1103,34 @@ function studentTable(type){
               type="number"
               step="0.01"
               min="0"
-              value="${studentValue(type,student.id,j)}"
-              onchange="setStudentInput(
-                '${type}',
-                '${student.id}',
-                ${j},
-                this.value
-              )"
+              value="${n(student.values[j])}"
+              onchange="
+                setStudentValue(
+                  '${type}',
+                  ${i},
+                  ${j},
+                  this.value
+                )
+              "
             >
 
           </td>
 
-        `).join('')}
+        `).join("")}
 
       </tr>
+
     `;
+
   });
 
-  /*
-    ESTA É A LINHA QUE FICA SEMPRE NO FINAL.
-    Não existe limite de alunos.
-  */
 
-  html+=`
+  /* =====================================================
+     LINHA DE ADICIONAR
+     SEM LIMITE
+  ===================================================== */
+
+  html += `
 
       <tr class="addStudentRow">
 
@@ -999,107 +1138,117 @@ function studentTable(type){
 
           <button
             type="button"
-            onclick="addStudentInline('${type}')"
+            onclick="addStudent('${type}')"
           >
-            ${addText}
+            ＋ Adicionar ${isPersonal
+              ? "nova aluna"
+              : "novo aluno"}
           </button>
 
         </td>
 
       </tr>
 
+
       <tr class="totalRow">
 
-        <td>Total</td>
+        <td>
+          TOTAL ${isPersonal
+            ? "PERSONAL"
+            : "CONSULTORIA"}
+        </td>
 
-        ${months.map((_,j)=>`
+        ${months.map((m,j)=>`
 
           <td>
-            ${money(sumStudentInputs(type,j))}
+            ${money(
+              students.reduce(
+                (s,student)=>
+                  s+n(student.values[j]),
+                0
+              )
+            )}
           </td>
 
-        `).join('')}
+        `).join("")}
 
       </tr>
 
-          </tbody>
+        </tbody>
 
-        </table>
+      </table>
 
-      </div>
+    </div>
 
-    </section>
+  </div>
+
   `;
 
   return html;
+
 }
 
+
+function addStudent(type){
+
+  const personal =
+    type === "personal";
+
+  const name =
+    prompt(
+      personal
+        ? "Nome da nova aluna:"
+        : "Nome do novo aluno:"
+    );
+
+  if(!name || !name.trim()){
+    return;
+  }
+
+  db.students[type].push(
+    makeStudent(name.trim())
+  );
+
+  save();
+
+}
+
+
+function setStudentValue(
+  type,
+  studentIndex,
+  monthIndex,
+  value
+){
+
+  if(!db.students[type]){
+    return;
+  }
+
+  if(!db.students[type][studentIndex]){
+    return;
+  }
+
+  db.students[type][studentIndex]
+    .values[monthIndex] = n(value);
+
+  save();
+
+}
+
+
 /* =========================================================
-   ENTRADAS
+   APLICATIVO
 ========================================================= */
 
 function setApp(value){
 
-  if(!db.inputs.app){
-    db.inputs.app={};
-  }
-
-  db.inputs.app[db.month]=n(value);
+  db.app[ym()] = n(value);
 
   save();
+
 }
 
-function appValue(){
-
-  if(typeof db.inputs.app==='number'){
-    return db.inputs.app;
-  }
-
-  return n(db.inputs.app?.[db.month]);
-}
-
-function income(){
-
-  const m=db.month;
-
-  const personal=
-    sumStudentInputs('personal',
-      new Date(m+'-01').getMonth()
-    );
-
-  /*
-    Como a tabela possui Jan-Dez, precisamos descobrir
-    qual coluna corresponde ao mês selecionado.
-  */
-
-  const monthIndex=
-    Number(m.split('-')[1])-1;
-
-  const personalMonth=
-    sumStudentInputs('personal',monthIndex);
-
-  const consultoriaMonth=
-    sumStudentInputs('consultoria',monthIndex);
-
-  const aplicativo=
-    appValue();
-
-  const extras=db.entries
-    .filter(e=>
-      e.ym===m &&
-      e.type==='entrada'
-    )
-    .reduce(
-      (s,e)=>s+n(e.amount),
-      0
-    );
-
-  return
-    personalMonth+
-    consultoriaMonth+
-    aplicativo+
-    extras;
-}
 
 /* =========================================================
    ENTRADAS EXTRAS
@@ -1109,35 +1258,45 @@ function addExtra(ev){
 
   ev.preventDefault();
 
-  const d=
-    document.getElementById('xd').value;
+  const date =
+    document.getElementById("xd").value;
 
-  const desc=
-    document.getElementById('xdesc').value;
+  const desc =
+    document.getElementById("xdesc").value.trim();
 
-  const amount=
-    n(document.getElementById('xval').value);
+  const value =
+    n(document.getElementById("xval").value);
+
+  if(!date || !desc || !value){
+    return;
+  }
 
   db.entries.push({
+
     id:id(),
-    ym:d.slice(0,7),
-    date:d,
-    type:'entrada',
-    extra:true,
-    amount,
-    desc
+
+    ym:date.slice(0,7),
+
+    type:"entrada",
+
+    amount:value,
+
+    category:"Entrada Extra",
+
+    form:"Entrada",
+
+    desc:desc,
+
+    date:date
+
   });
 
-  save();
-}
-
-function removeEntry(entryId){
-
-  db.entries=
-    db.entries.filter(e=>e.id!==entryId);
+  ev.target.reset();
 
   save();
+
 }
+
 
 /* =========================================================
    SAÍDAS
@@ -1147,28 +1306,51 @@ function addExpense(ev){
 
   ev.preventDefault();
 
-  const date=
-    document.getElementById('ed').value;
+  const date =
+    document.getElementById("ed").value;
 
-  db.expenses.push({
+  const desc =
+    document.getElementById("edesc").value.trim();
+
+  const value =
+    n(document.getElementById("eval").value);
+
+  const category =
+    document.getElementById("ecat").value;
+
+  const form =
+    document.getElementById("eform").value;
+
+  if(!date || !desc || !value){
+    return;
+  }
+
+  db.entries.push({
+
     id:id(),
+
     ym:date.slice(0,7),
-    date,
-    desc:document.getElementById('edesc').value,
-    amount:n(document.getElementById('eval').value),
-    category:document.getElementById('ecat').value
+
+    type:"saida",
+
+    amount:value,
+
+    category:category,
+
+    form:form,
+
+    desc:desc,
+
+    date:date
+
   });
 
-  save();
-}
-
-function removeExpense(expenseId){
-
-  db.expenses=
-    db.expenses.filter(e=>e.id!==expenseId);
+  ev.target.reset();
 
   save();
+
 }
+
 
 /* =========================================================
    CARTÕES
@@ -1178,70 +1360,75 @@ function addCard(ev,which){
 
   ev.preventDefault();
 
-  const prefix=
-    which==='casa'
-      ? 'cc'
-      : 'cp';
+  const prefix =
+    which === "casa"
+      ? "cc"
+      : "cp";
 
-  const desc=
-    document.getElementById(prefix+'desc').value;
+  const desc =
+    document.getElementById(prefix+"desc")
+      .value.trim();
 
-  const amount=
-    n(document.getElementById(prefix+'val').value);
+  const value =
+    n(document.getElementById(prefix+"val").value);
 
-  const start=
-    document.getElementById(prefix+'month').value;
+  const month =
+    document.getElementById(prefix+"month").value;
 
-  const parcels=
+  const parcelas =
     Math.max(
       1,
       parseInt(
-        document.getElementById(prefix+'parcelas').value
-      )||1
+        document.getElementById(prefix+"parcelas").value
+      ) || 1
     );
 
-  const months=[];
+  if(!desc || !value || !month){
+    return;
+  }
 
-  const [y,m]=start.split('-').map(Number);
+  const monthsList = [];
 
-  for(let i=0;i<parcels;i++){
+  let y =
+    Number(month.slice(0,4));
 
-    const d=
-      new Date(y,m-1+i,1);
+  let m =
+    Number(month.slice(5,7))-1;
 
-    months.push(
-      d.toISOString().slice(0,7)
+  for(let i=0;i<parcelas;i++){
+
+    const d =
+      new Date(y,m+i,1);
+
+    monthsList.push(
+      d.getFullYear()+"-"+
+      String(d.getMonth()+1).padStart(2,"0")
     );
+
   }
 
   db.cards[which].push({
+
     id:id(),
-    desc,
-    amount,
-    months
+
+    desc:desc,
+
+    value:value,
+
+    month:month,
+
+    months:monthsList,
+
+    parcelas:parcelas
+
   });
 
-  save();
-}
-
-function removeCard(which,cardId){
-
-  db.cards[which]=
-    db.cards[which]
-      .filter(e=>e.id!==cardId);
+  ev.target.reset();
 
   save();
+
 }
 
-function cardTotal(which){
-
-  return db.cards[which]
-    .filter(e=>e.months.includes(db.month))
-    .reduce(
-      (s,e)=>s+n(e.amount),
-      0
-    );
-}
 
 /* =========================================================
    RECORRENTES
@@ -1251,23 +1438,38 @@ function addRecurring(ev){
 
   ev.preventDefault();
 
+  const desc =
+    document.getElementById("rdesc")
+      .value.trim();
+
+  const value =
+    n(document.getElementById("rval").value);
+
+  const category =
+    document.getElementById("rcat").value;
+
+  if(!desc || !value){
+    return;
+  }
+
   db.recurring.push({
+
     id:id(),
-    desc:document.getElementById('rdesc').value,
-    amount:n(document.getElementById('rval').value),
-    category:document.getElementById('rcat').value
+
+    desc:desc,
+
+    value:value,
+
+    category:category
+
   });
 
-  save();
-}
-
-function removeRecurring(recId){
-
-  db.recurring=
-    db.recurring.filter(e=>e.id!==recId);
+  ev.target.reset();
 
   save();
+
 }
+
 
 /* =========================================================
    RESERVA
@@ -1277,405 +1479,543 @@ function addReserve(ev){
 
   ev.preventDefault();
 
-  db.reserve=
-    db.reserve.filter(
-      e=>e.ym!==db.month
-    );
+  const value =
+    n(document.getElementById("rr").value);
+
+  if(!value){
+    return;
+  }
 
   db.reserve.push({
+
     id:id(),
-    ym:db.month,
-    amount:n(
-      document.getElementById('rr').value
-    )
+
+    ym:ym(),
+
+    value:value
+
   });
 
+  ev.target.reset();
+
   save();
+
 }
 
+
 /* =========================================================
-   DESPESAS DO MÊS
+   CÁLCULOS
 ========================================================= */
 
-function monthlyExpenses(){
+function personalMonth(){
 
-  const fixed=
-    db.expenses
-      .filter(e=>e.ym===db.month)
-      .reduce((s,e)=>s+n(e.amount),0);
+  return (
+    db.students.personal || []
+  ).reduce(
+    (s,student)=>
+      s+n(student.values[currentMonthIndex]),
+    0
+  );
 
-  const cards=
-    cardTotal('casa')+
-    cardTotal('pessoal');
-
-  const reserve=
-    db.reserve
-      .filter(e=>e.ym===db.month)
-      .reduce((s,e)=>s+n(e.amount),0);
-
-  return fixed+cards+reserve;
 }
 
+
+function consultoriaMonth(){
+
+  return (
+    db.students.consultoria || []
+  ).reduce(
+    (s,student)=>
+      s+n(student.values[currentMonthIndex]),
+    0
+  );
+
+}
+
+
+function extraIncome(){
+
+  return db.entries
+
+    .filter(e =>
+      e.ym === ym() &&
+      e.type === "entrada"
+    )
+
+    .reduce(
+      (s,e)=>s+n(e.amount),
+      0
+    );
+
+}
+
+
+function appMonth(){
+
+  return n(
+    db.app[ym()]
+  );
+
+}
+
+
+function income(){
+
+  return (
+    personalMonth() +
+    consultoriaMonth() +
+    appMonth() +
+    extraIncome()
+  );
+
+}
+
+
+function expenses(){
+
+  let total = 0;
+
+
+  total += db.entries
+
+    .filter(e =>
+      e.ym === ym() &&
+      e.type === "saida"
+    )
+
+    .reduce(
+      (s,e)=>s+n(e.amount),
+      0
+    );
+
+
+  total += db.cards.casa
+
+    .filter(c =>
+      c.months &&
+      c.months.includes(ym())
+    )
+
+    .reduce(
+      (s,c)=>s+n(c.value),
+      0
+    );
+
+
+  total += db.cards.pessoal
+
+    .filter(c =>
+      c.months &&
+      c.months.includes(ym())
+    )
+
+    .reduce(
+      (s,c)=>s+n(c.value),
+      0
+    );
+
+
+  total += db.recurring
+
+    .reduce(
+      (s,r)=>s+n(r.value),
+      0
+    );
+
+
+  return total;
+
+}
+
+
+function reserveTotal(){
+
+  return db.reserve.reduce(
+    (s,r)=>s+n(r.value),
+    0
+  );
+
+}
+
+
 /* =========================================================
-   RENDER PAINEL
+   RENDER
 ========================================================= */
 
-function renderPanel(){
+function render(){
 
-  const inc=income();
+  document.getElementById(
+    "monthTitle"
+  ).textContent =
+    months[currentMonthIndex] +
+    " " +
+    currentYear;
 
-  const expenses=
-    db.expenses
-      .filter(e=>e.ym===db.month)
-      .reduce((s,e)=>s+n(e.amount),0);
 
-  const cards=
-    cardTotal('casa')+
-    cardTotal('pessoal');
+  /* ALUNOS */
 
-  const reserve=
-    db.reserve
-      .filter(e=>e.ym===db.month)
-      .reduce((s,e)=>s+n(e.amount),0);
+  document.getElementById(
+    "studentSections"
+  ).innerHTML =
 
-  const out=
-    expenses+
-    cards+
-    reserve;
+    studentTable("personal") +
 
-  const available=
+    studentTable("consultoria");
+
+
+  /* APLICATIVO */
+
+  const app =
+    document.getElementById("appValue");
+
+  if(app){
+
+    app.value =
+      db.app[ym()] || "";
+
+  }
+
+
+  /* MÉTRICAS */
+
+  const inc =
+    income();
+
+  const out =
+    expenses();
+
+  const available =
     Math.max(0,inc-out);
 
-  const personalCount=
-    db.students.personal.length;
 
-  const consultoriaCount=
-    db.students.consultoria.length;
-
-  document.getElementById('metrics').innerHTML=`
+  document.getElementById(
+    "metrics"
+  ).innerHTML = `
 
     <div class="metric">
-      <div class="label">Renda</div>
-      <div class="big green">${money(inc)}</div>
+
+      <div class="label">
+        Renda
+      </div>
+
+      <div class="big green">
+        ${money(inc)}
+      </div>
+
     </div>
 
-    <div class="metric">
-      <div class="label">Saídas</div>
-      <div class="big">${money(out)}</div>
-    </div>
 
     <div class="metric">
-      <div class="label">Disponível</div>
-      <div class="big green">${money(available)}</div>
+
+      <div class="label">
+        Saídas
+      </div>
+
+      <div class="big red">
+        ${money(out)}
+      </div>
+
     </div>
 
+
     <div class="metric">
-      <div class="label">Cartões</div>
-      <div class="big">${money(cards)}</div>
+
+      <div class="label">
+        Disponível
+      </div>
+
+      <div class="big">
+        ${money(available)}
+      </div>
+
+    </div>
+
+
+    <div class="metric">
+
+      <div class="label">
+        Reserva acumulada
+      </div>
+
+      <div class="big">
+        ${money(reserveTotal())}
+      </div>
+
     </div>
 
   `;
 
-  document.getElementById('personalMeta').textContent=
-    `${personalCount}/14`;
 
-  document.getElementById('consultoriaMeta').textContent=
-    `${consultoriaCount}/20`;
+  /* METAS */
 
-  document.getElementById('personalProgress').style.width=
+  const personalCount =
+    db.students.personal.length;
+
+  const consultoriaCount =
+    db.students.consultoria.length;
+
+
+  document.getElementById(
+    "personalMeta"
+  ).textContent =
+    personalCount + " / 14";
+
+
+  document.getElementById(
+    "consultoriaMeta"
+  ).textContent =
+    consultoriaCount + " / 20";
+
+
+  document.getElementById(
+    "personalProgress"
+  ).style.width =
     Math.min(
       100,
-      (personalCount/14)*100
-    )+'%';
+      personalCount / 14 * 100
+    ) + "%";
 
-  document.getElementById('consultoriaProgress').style.width=
+
+  document.getElementById(
+    "consultoriaProgress"
+  ).style.width =
     Math.min(
       100,
-      (consultoriaCount/20)*100
-    )+'%';
+      consultoriaCount / 20 * 100
+    ) + "%";
+
+
+  renderExtras();
+  renderExpenses();
+  renderCards("casa");
+  renderCards("pessoal");
+  renderRecurring();
+
+
+  document.getElementById(
+    "reserveTotal"
+  ).textContent =
+    money(reserveTotal());
+
 }
 
+
 /* =========================================================
-   RENDER ENTRADAS
+   LISTAS
 ========================================================= */
 
-function renderEntradas(){
+function renderExtras(){
 
-  document.getElementById('monthTitle').textContent=
-    monthLabel(db.month);
+  const list =
+    document.getElementById("extraList");
 
-  document.getElementById('studentSections').innerHTML=
-    studentTable('personal')+
-    studentTable('consultoria');
+  const items =
+    db.entries.filter(e =>
+      e.type === "entrada" &&
+      e.ym === ym()
+    );
 
-  document.getElementById('appValue').value=
-    appValue();
+  list.innerHTML =
+    items.length
+      ? items.map(e=>`
 
-  const extras=
-    db.entries
-      .filter(e=>
-        e.type==='entrada' &&
-        e.extra===true &&
-        e.ym===db.month
-      );
+        <div class="row">
 
-  document.getElementById('extraList').innerHTML=
-    extras.length
-
-      ? extras.map(e=>`
-
-          <div class="row">
-
-            <span>
+          <div>
+            <strong>
               ${escapeHtml(e.desc)}
-              <small>${e.date}</small>
-            </span>
+            </strong>
 
-            <span>
-              <b class="green">
-                ${money(e.amount)}
-              </b>
-
-              <button
-                class="danger"
-                onclick="removeEntry('${e.id}')"
-              >
-                ×
-              </button>
-            </span>
-
+            <small>
+              ${e.date || ""}
+            </small>
           </div>
 
-        `).join('')
+          <strong class="green">
+            ${money(e.amount)}
+          </strong>
 
-      : `<div class="note">
-          Nenhuma entrada extra lançada neste mês.
-        </div>`;
+        </div>
+
+      `).join("")
+      : `<span class="note">
+          Nenhuma entrada extra neste mês.
+         </span>`;
+
 }
 
-/* =========================================================
-   RENDER SAÍDAS
-========================================================= */
 
 function renderExpenses(){
 
-  const list=
-    db.expenses
-      .filter(e=>e.ym===db.month);
+  const list =
+    document.getElementById("expenseList");
 
-  document.getElementById('expenseList').innerHTML=
+  const items =
+    db.entries.filter(e =>
+      e.type === "saida" &&
+      e.ym === ym()
+    );
 
-    list.length
+  list.innerHTML =
+    items.length
+      ? items.map(e=>`
 
-      ? list.map(e=>`
+        <div class="row">
 
-          <div class="row">
-
-            <span>
+          <div>
+            <strong>
               ${escapeHtml(e.desc)}
-              <small>
-                ${e.date} • ${escapeHtml(e.category)}
-              </small>
-            </span>
+            </strong>
 
-            <span>
-              <b>${money(e.amount)}</b>
-
-              <button
-                class="danger"
-                onclick="removeExpense('${e.id}')"
-              >
-                ×
-              </button>
-            </span>
-
+            <small>
+              ${e.date || ""}
+              •
+              ${escapeHtml(e.category || "")}
+            </small>
           </div>
 
-        `).join('')
+          <strong class="red">
+            ${money(e.amount)}
+          </strong>
 
-      : `<div class="note">
+        </div>
+
+      `).join("")
+      : `<span class="note">
           Nenhuma saída lançada neste mês.
-        </div>`;
+         </span>`;
+
 }
 
-/* =========================================================
-   RENDER CARTÕES
-========================================================= */
 
 function renderCards(which){
 
-  const element=
-    document.getElementById(
-      which==='casa'
-        ? 'cardCasaList'
-        : 'cardPessoalList'
-    );
+  const idName =
+    which === "casa"
+      ? "cardCasaList"
+      : "cardPessoalList";
 
-  const list=
-    db.cards[which]
-      .filter(e=>e.months.includes(db.month));
+  const list =
+    document.getElementById(idName);
 
-  element.innerHTML=
+  const cards =
+    db.cards[which] || [];
 
-    list.length
+  list.innerHTML =
+    cards.length
+      ? cards.map(c=>`
 
-      ? list.map(e=>`
+        <div class="row">
 
-          <div class="row">
+          <div>
 
-            <span>
-              ${escapeHtml(e.desc)}
-              <small>
-                Parcela de ${money(e.amount)}
-                • ${e.months.length}x
-              </small>
-            </span>
+            <strong>
+              ${escapeHtml(c.desc)}
+            </strong>
 
-            <span>
-              <b>${money(e.amount)}</b>
-
-              <button
-                class="danger"
-                onclick="removeCard('${which}','${e.id}')"
-              >
-                ×
-              </button>
-            </span>
+            <small>
+              ${c.parcelas || 1} parcela(s)
+            </small>
 
           </div>
 
-        `).join('')
+          <strong>
+            ${money(c.value)}
+          </strong>
 
-      : `<div class="note">
-          Nenhuma compra/parcela neste mês.
-        </div>`;
+        </div>
+
+      `).join("")
+      : `<span class="note">
+          Nenhuma compra cadastrada.
+         </span>`;
+
 }
 
-/* =========================================================
-   RENDER RECORRENTES
-========================================================= */
 
 function renderRecurring(){
 
-  const list=
-    db.recurring;
+  const list =
+    document.getElementById(
+      "recurringList"
+    );
 
-  document.getElementById('recurringList').innerHTML=
+  list.innerHTML =
+    db.recurring.length
+      ? db.recurring.map(r=>`
 
-    list.length
+        <div class="row">
 
-      ? list.map(e=>`
+          <div>
+            <strong>
+              ${escapeHtml(r.desc)}
+            </strong>
 
-          <div class="row">
-
-            <span>
-              ${escapeHtml(e.desc)}
-              <small>${escapeHtml(e.category)}</small>
-            </span>
-
-            <span>
-              <b>${money(e.amount)}</b>
-
-              <button
-                class="danger"
-                onclick="removeRecurring('${e.id}')"
-              >
-                ×
-              </button>
-            </span>
-
+            <small>
+              ${escapeHtml(r.category)}
+            </small>
           </div>
 
-        `).join('')
+          <strong>
+            ${money(r.value)}
+          </strong>
 
-      : `<div class="note">
-          Nenhuma despesa recorrente cadastrada.
-        </div>`;
+        </div>
+
+      `).join("")
+      : `<span class="note">
+          Nenhuma recorrência cadastrada.
+         </span>`;
+
 }
 
+
 /* =========================================================
-   RENDER RESERVA
+   MÊS
 ========================================================= */
 
-function renderReserve(){
+function changeMonth(direction){
 
-  const list=
-    db.reserve
-      .filter(e=>e.ym===db.month);
+  currentMonthIndex += direction;
 
-  document.getElementById('reserveList').innerHTML=
+  if(currentMonthIndex > 11){
 
-    list.length
+    currentMonthIndex = 0;
+    currentYear++;
 
-      ? list.map(e=>`
+  }
 
-          <div class="row">
+  if(currentMonthIndex < 0){
 
-            <span>
-              Reserva de emergência
-              <small>${db.month}</small>
-            </span>
+    currentMonthIndex = 11;
+    currentYear--;
 
-            <b class="green">
-              ${money(e.amount)}
-            </b>
+  }
 
-          </div>
+  save();
 
-        `).join('')
-
-      : `<div class="note">
-          Nenhuma reserva registrada neste mês.
-        </div>`;
 }
 
+
 /* =========================================================
-   ESCAPE HTML
+   SEGURANÇA DE TEXTO
 ========================================================= */
 
 function escapeHtml(value){
 
   return String(value)
-    .replaceAll('&','&amp;')
-    .replaceAll('<','&lt;')
-    .replaceAll('>','&gt;')
-    .replaceAll('"','&quot;')
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
+
 }
+
 
 /* =========================================================
-   RENDER GERAL
+   INICIAR
 ========================================================= */
-
-function render(){
-
-  renderPanel();
-  renderEntradas();
-  renderExpenses();
-  renderCards('casa');
-  renderCards('pessoal');
-  renderRecurring();
-  renderReserve();
-
-  /*
-    Datas padrão dos formulários
-  */
-
-  const today=
-    new Date().toISOString().slice(0,10);
-
-  if(document.getElementById('xd'))
-    document.getElementById('xd').value=today;
-
-  if(document.getElementById('ed'))
-    document.getElementById('ed').value=today;
-
-  if(document.getElementById('ccmonth'))
-    document.getElementById('ccmonth').value=db.month;
-
-  if(document.getElementById('cpmonth'))
-    document.getElementById('cpmonth').value=db.month;
-}
 
 render();
 
