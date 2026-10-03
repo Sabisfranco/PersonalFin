@@ -137,10 +137,48 @@ let db=JSON.parse(localStorage.getItem('personalfin_complete_v1')||'null')||init
 
 let tab='painel';
 
+
+/* =========================
+   SALVAR
+   ========================= */
+
+/*
+Mantém a posição horizontal das tabelas depois do render.
+Assim, se você estiver em Outubro e lançar um valor,
+a tabela continua exatamente em Outubro.
+*/
+
 function save(){
-localStorage.setItem('personalfin_complete_v1',JSON.stringify(db));
-render()
+
+const scrollPositions=[
+...document.querySelectorAll('.tablewrap')
+].map(el=>el.scrollLeft);
+
+localStorage.setItem(
+'personalfin_complete_v1',
+JSON.stringify(db)
+);
+
+render();
+
+requestAnimationFrame(()=>{
+
+const tables=[
+...document.querySelectorAll('.tablewrap')
+];
+
+tables.forEach((el,i)=>{
+
+if(scrollPositions[i]!==undefined){
+el.scrollLeft=scrollPositions[i];
 }
+
+});
+
+});
+
+}
+
 
 function currentMonth(){
 return db.month
@@ -151,14 +189,21 @@ return db.year+'-'+String(db.month+1).padStart(2,'0')
 }
 
 function monthNav(){
+
 return `<div class="monthbar">
+
 <button class="secondary" onclick="moveMonth(-1)">‹</button>
+
 <strong>${fullMonths[db.month]} ${db.year}</strong>
+
 <button class="secondary" onclick="moveMonth(1)">›</button>
+
 </div>`
+
 }
 
 function moveMonth(x){
+
 db.month+=x;
 
 if(db.month<0){
@@ -172,9 +217,12 @@ db.year++
 }
 
 save()
+
 }
 
+
 function tabs(){
+
 let a=[
 ['painel','Painel'],
 ['entradas','Entradas'],
@@ -186,7 +234,10 @@ let a=[
 ];
 
 document.getElementById('tabs').innerHTML=
-a.map(x=>`<button class="tab ${tab===x[0]?'active':''}" onclick="tab='${x[0]}';render()">${x[1]}</button>`).join('')
+a.map(x=>
+`<button class="tab ${tab===x[0]?'active':''}" onclick="tab='${x[0]}';render()">${x[1]}</button>`
+).join('')
+
 }
 
 
@@ -218,36 +269,47 @@ return personal+consultoria+aplicativo+extras;
    ========================= */
 
 function pixFixed(){
+
 return db.recurring
 .filter(r=>r[0]==='Gastos fixos'&&r[4]==='Sim')
 .reduce((s,r)=>s+n(r[3]),0)
+
 }
 
 function cardTotal(which){
+
 return db.cards[which]
 .filter(e=>e.months.includes(ym()))
 .reduce((s,e)=>s+n(e.value),0)
+
 }
 
 function cardAll(which){
+
 return db.cards[which]
 .filter(e=>e.month===ym())
 .reduce((s,e)=>s+n(e.value),0)
+
 }
 
 function investments(){
+
 return db.entries
 .filter(e=>e.ym===ym()&&e.type==='saida'&&e.category==='Investimentos')
 .reduce((s,e)=>s+n(e.amount),0)
+
 }
 
 function reserve(){
+
 return db.entries
 .filter(e=>e.ym===ym()&&e.type==='saida'&&e.category==='Reserva de emergência')
 .reduce((s,e)=>s+n(e.amount),0)
+
 }
 
 function totalOut(){
+
 return pixFixed()
 +cardAll('casa')
 +cardAll('pessoal')
@@ -262,6 +324,7 @@ e.category!=='Reserva de emergência'&&
 e.form==='Pix'
 )
 .reduce((s,e)=>s+n(e.amount),0)
+
 }
 
 
@@ -399,7 +462,9 @@ Recorrentes é apenas cadastro de referência e não é somado duas vezes.
 </div>
 
 </section>
+
 `
+
 }
 
 function averageFixed(){
@@ -407,9 +472,11 @@ return pixFixed()
 }
 
 function reserveAccum(){
+
 return db.entries
 .filter(e=>e.type==='saida'&&e.category==='Reserva de emergência')
 .reduce((s,e)=>s+n(e.amount),0)
+
 }
 
 
@@ -450,20 +517,26 @@ ${names.map((name,i)=>`
 <td>${name}</td>
 
 ${months.map((m,j)=>`
+
 <td>
+
 <input
 type="number"
 step="0.01"
 value="${inputValue('personal',i,j)}"
 onchange="setInput('personal',${i},${j},this.value)"
 >
+
 </td>
+
 `).join('')}
 
 <td>
+
 ${name==='Luís Lunguinho'
 ?'R$ 200 em dinheiro + R$ 680 em permuta'
 :''}
+
 </td>
 
 </tr>
@@ -475,7 +548,9 @@ ${name==='Luís Lunguinho'
 <th>TOTAL PERSONAL</th>
 
 ${months.map((m,j)=>`
+
 <th>${money(sumInputs('personal',j))}</th>
+
 `).join('')}
 
 <th></th>
@@ -518,14 +593,18 @@ ${db.inputs.consultoria.map((name,i)=>`
 <td>${name}</td>
 
 ${months.map((m,j)=>`
+
 <td>
+
 <input
 type="number"
 step="0.01"
 value="${inputValue('consultoria',i,j)}"
 onchange="setInput('consultoria',${i},${j},this.value)"
 >
+
 </td>
+
 `).join('')}
 
 <td>R$ 150/mês — ativo</td>
@@ -539,7 +618,9 @@ onchange="setInput('consultoria',${i},${j},this.value)"
 <th>TOTAL CONSULTORIA</th>
 
 ${months.map((m,j)=>`
+
 <th>${money(sumInputs('consultoria',j))}</th>
+
 `).join('')}
 
 <th></th>
@@ -689,6 +770,7 @@ onclick="removeEntry('${e.id}')"
 </section>
 
 `
+
 }
 
 
@@ -709,6 +791,11 @@ function setInput(type,i,j,v){
 db.inputValues=db.inputValues||{};
 
 db.inputValues[type+'_'+i+'_'+j]=n(v);
+
+/*
+O save() agora preserva automaticamente
+a posição horizontal da tabela.
+*/
 
 save()
 
@@ -737,19 +824,31 @@ let desc=ev.target.querySelector('#extraDescricao').value.trim();
 let valor=n(ev.target.querySelector('#extraValor').value);
 
 if(!data||!desc||!valor){
+
 alert('Preencha data, descrição e valor.');
+
 return
+
 }
 
 db.entries.push({
+
 id:id(),
+
 ym:data.slice(0,7),
+
 type:'entrada',
+
 amount:valor,
+
 category:'Entrada Extra',
+
 form:'Entrada',
+
 desc:desc,
+
 date:data
+
 });
 
 save()
@@ -826,7 +925,9 @@ return monthNav()+`
 
 <div>
 <label>Categoria</label>
+
 <select id="ec">
+
 <option>Outros</option>
 <option>Alimentação</option>
 <option>Moradia</option>
@@ -836,24 +937,36 @@ return monthNav()+`
 <option>Profissional</option>
 <option>Investimentos</option>
 <option>Reserva de emergência</option>
+
 </select>
+
 </div>
 
 <div>
+
 <label>Forma</label>
+
 <select id="ef">
+
 <option>Pix</option>
 <option>Dinheiro</option>
+
 </select>
+
 </div>
 
 <div>
+
 <label>Descrição</label>
+
 <input id="ed" required>
+
 </div>
 
 <div class="full">
+
 <button>Adicionar saída</button>
+
 </div>
 
 </form>
@@ -910,6 +1023,7 @@ onclick="removeEntry('${e.id}')"
 </section>
 
 `
+
 }
 
 function addEntry(ev,type){
@@ -982,29 +1096,43 @@ O app distribui automaticamente a parcela nos meses seguintes.
 <form class="form" onsubmit="addCard(event,'${which}')">
 
 <div>
+
 <label>Descrição</label>
+
 <input id="cd" required>
+
 </div>
 
 <div>
+
 <label>Valor total da compra</label>
+
 <input id="cv" type="number" step="0.01" required>
+
 </div>
 
 <div>
+
 <label>Parcelas</label>
+
 <input id="cn" type="number" min="1" max="60" value="1" required>
+
 </div>
 
 <div>
+
 <label>Mês inicial</label>
+
 <input id="cm" type="month" value="${ym()}" required>
+
 </div>
 
 <div>
+
 <label>Categoria</label>
 
 <select id="cc">
+
 <option>Casa</option>
 <option>Alimentação</option>
 <option>Transporte</option>
@@ -1012,6 +1140,7 @@ O app distribui automaticamente a parcela nos meses seguintes.
 <option>Saúde</option>
 <option>Profissional</option>
 <option>Outros</option>
+
 </select>
 
 </div>
@@ -1088,6 +1217,7 @@ ${money(cardAll(which))}
 </section>
 
 `
+
 }
 
 function addCard(ev,which){
@@ -1170,9 +1300,11 @@ ou transformado em uma compra/recorrência conforme o caso.
 <label>Categoria</label>
 
 <select id="rc">
+
 <option>Gastos fixos</option>
 <option>Cartão Casa</option>
 <option>Cartão Pessoal</option>
+
 </select>
 
 </div>
@@ -1180,6 +1312,7 @@ ou transformado em uma compra/recorrência conforme o caso.
 <div>
 
 <label>Descrição</label>
+
 <input id="rd" required>
 
 </div>
@@ -1189,9 +1322,11 @@ ou transformado em uma compra/recorrência conforme o caso.
 <label>Forma</label>
 
 <select id="rf">
+
 <option>Pix</option>
 <option>Cartão Casa</option>
 <option>Cartão Pessoal</option>
+
 </select>
 
 </div>
@@ -1199,6 +1334,7 @@ ou transformado em uma compra/recorrência conforme o caso.
 <div>
 
 <label>Valor mensal</label>
+
 <input id="rv" type="number" step="0.01" required>
 
 </div>
@@ -1208,8 +1344,10 @@ ou transformado em uma compra/recorrência conforme o caso.
 <label>Contar automaticamente?</label>
 
 <select id="ra">
+
 <option>Não</option>
 <option>Sim</option>
+
 </select>
 
 </div>
@@ -1287,6 +1425,7 @@ Excluir
 </section>
 
 `
+
 }
 
 function addRec(ev){
@@ -1444,6 +1583,7 @@ A reserva é lançada manualmente e não deve ser duplicada pelo cadastro de rec
 </section>
 
 `
+
 }
 
 function addReserve(ev){
@@ -1458,7 +1598,9 @@ ym:ym(),
 
 type:'saida',
 
-amount:n(rr.value),
+amount:n(
+document.getElementById('rr').value
+),
 
 category:'Reserva de emergência',
 
