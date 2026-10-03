@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
 <meta name="theme-color" content="#111111">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -10,20 +11,28 @@
 <title>PersonalFin</title>
 
 <style>
+
 :root{
   --bg:#f5f5f5;
-  --card:#fff;
+  --card:#ffffff;
   --text:#171717;
   --muted:#777;
   --line:#e5e5e5;
   --wine:#7b2435;
+  --wine-light:#f7e9ed;
   --green:#237a45;
   --red:#b42318;
   --shadow:0 2px 12px rgba(0,0,0,.06);
   --radius:14px;
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
 
 body{
   margin:0;
@@ -38,7 +47,7 @@ header{
   padding:20px 18px 18px;
   position:sticky;
   top:0;
-  z-index:20;
+  z-index:100;
 }
 
 header h1{
@@ -52,6 +61,55 @@ header p{
   font-size:13px;
 }
 
+/* =========================
+   ABAS
+========================= */
+
+.nav{
+  position:sticky;
+  top:76px;
+  z-index:90;
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+
+  display:flex;
+  overflow-x:auto;
+  white-space:nowrap;
+
+  -webkit-overflow-scrolling:touch;
+}
+
+.nav::-webkit-scrollbar{
+  display:none;
+}
+
+.nav button{
+  flex:0 0 auto;
+  background:transparent;
+  color:#666;
+  border:0;
+  border-radius:0;
+  padding:14px 18px;
+  font-weight:600;
+  font-size:14px;
+  border-bottom:3px solid transparent;
+}
+
+.nav button:hover{
+  background:#fafafa;
+}
+
+.nav button.active{
+  color:var(--wine);
+  border-bottom-color:var(--wine);
+  background:#fff;
+}
+
+/* =========================
+   GERAL
+========================= */
+
 main{
   max-width:1200px;
   margin:auto;
@@ -59,7 +117,8 @@ main{
 }
 
 section{
-  margin-bottom:25px;
+  margin-bottom:30px;
+  scroll-margin-top:145px;
 }
 
 .title{
@@ -82,11 +141,15 @@ section{
 }
 
 @media(max-width:800px){
-  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
 }
 
 @media(max-width:520px){
-  .grid{grid-template-columns:1fr}
+  .grid{
+    grid-template-columns:1fr;
+  }
 }
 
 .metric{
@@ -107,8 +170,13 @@ section{
   font-weight:700;
 }
 
-.green{color:var(--green)}
-.red{color:var(--red)}
+.green{
+  color:var(--green);
+}
+
+.red{
+  color:var(--red);
+}
 
 .metaBox{
   background:#fff;
@@ -142,6 +210,10 @@ section{
   font-size:13px;
 }
 
+/* =========================
+   FORMULÁRIOS
+========================= */
+
 .form{
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
@@ -149,11 +221,15 @@ section{
 }
 
 @media(max-width:800px){
-  .form{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .form{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
 }
 
 @media(max-width:520px){
-  .form{grid-template-columns:1fr}
+  .form{
+    grid-template-columns:1fr;
+  }
 }
 
 label{
@@ -163,11 +239,14 @@ label{
   margin-bottom:5px;
 }
 
-input,select,button{
+input,
+select,
+button{
   font:inherit;
 }
 
-input,select{
+input,
+select{
   width:100%;
   border:1px solid var(--line);
   border-radius:9px;
@@ -200,6 +279,10 @@ button.danger{
   grid-column:1/-1;
 }
 
+/* =========================
+   MÊS
+========================= */
+
 .monthbar{
   display:flex;
   align-items:center;
@@ -210,6 +293,10 @@ button.danger{
 .monthbar strong{
   font-size:17px;
 }
+
+/* =========================
+   TABELAS
+========================= */
 
 .tablewrap{
   overflow-x:auto;
@@ -225,7 +312,8 @@ table{
   background:#fff;
 }
 
-th,td{
+th,
+td{
   border-bottom:1px solid var(--line);
   padding:8px;
   text-align:center;
@@ -280,6 +368,10 @@ td input{
   text-align:left;
 }
 
+/* =========================
+   LISTAS
+========================= */
+
 .rows{
   display:flex;
   flex-direction:column;
@@ -303,460 +395,953 @@ td input{
   color:var(--muted);
   margin-top:3px;
 }
+
+/* =========================
+   RODAPÉ
+========================= */
+
+.footer{
+  text-align:center;
+  color:#999;
+  font-size:12px;
+  padding:20px 0 40px;
+}
+
 </style>
 </head>
 
 <body>
 
+<!-- =====================================================
+     CABEÇALHO
+===================================================== -->
+
 <header>
+
   <h1>PersonalFin</h1>
-  <p>Controle financeiro pessoal • dados salvos neste aparelho</p>
+
+  <p>
+    Controle financeiro pessoal • dados salvos neste aparelho
+  </p>
+
 </header>
+
+
+<!-- =====================================================
+     ABAS
+===================================================== -->
+
+<nav class="nav" id="mainNav">
+
+  <button
+    data-target="painel"
+    onclick="goToSection('painel')"
+  >
+    Painel
+  </button>
+
+  <button
+    data-target="entradas"
+    onclick="goToSection('entradas')"
+  >
+    Entradas
+  </button>
+
+  <button
+    data-target="saidas"
+    onclick="goToSection('saidas')"
+  >
+    Saídas
+  </button>
+
+  <button
+    data-target="cartaoCasa"
+    onclick="goToSection('cartaoCasa')"
+  >
+    Cartão Casa
+  </button>
+
+  <button
+    data-target="cartaoPessoal"
+    onclick="goToSection('cartaoPessoal')"
+  >
+    Cartão Pessoal
+  </button>
+
+  <button
+    data-target="recorrentes"
+    onclick="goToSection('recorrentes')"
+  >
+    Recorrentes
+  </button>
+
+  <button
+    data-target="reserva"
+    onclick="goToSection('reserva')"
+  >
+    Reserva
+  </button>
+
+</nav>
+
 
 <main>
 
-<!-- ================= PAINEL ================= -->
 
-<section>
-  <h2 class="title">Painel Financeiro</h2>
+<!-- =====================================================
+     PAINEL
+===================================================== -->
 
-  <div class="grid" id="metrics"></div>
+<section id="painel">
 
-  <div class="grid" style="margin-top:12px">
-
-    <div class="metaBox">
-      <div class="metaTop">
-        <strong>Personal</strong>
-        <span id="personalMeta"></span>
-      </div>
-
-      <div class="progress">
-        <span id="personalProgress"></span>
-      </div>
-
-      <div class="note" style="margin-top:7px">
-        Meta atual: 14 alunas — sem limite de cadastro.
-      </div>
-    </div>
-
-    <div class="metaBox">
-      <div class="metaTop">
-        <strong>Consultoria online</strong>
-        <span id="consultoriaMeta"></span>
-      </div>
-
-      <div class="progress">
-        <span id="consultoriaProgress"></span>
-      </div>
-
-      <div class="note" style="margin-top:7px">
-        Meta atual: 20 alunos — sem limite de cadastro.
-      </div>
-    </div>
-
-  </div>
-</section>
+  <h2 class="title">
+    Painel Financeiro
+  </h2>
 
 
-<!-- ================= ENTRADAS ================= -->
-
-<section>
-
-<h2 class="title">Entradas</h2>
-
-<div class="card">
-  <div class="monthbar">
-
-    <button class="secondary" onclick="changeMonth(-1)">
-      ‹
-    </button>
-
-    <strong id="monthTitle"></strong>
-
-    <button class="secondary" onclick="changeMonth(1)">
-      ›
-    </button>
-
-  </div>
-</div>
+  <div
+    class="grid"
+    id="metrics"
+  ></div>
 
 
-<div id="studentSections"></div>
-
-
-<!-- APLICATIVO -->
-
-<div class="card">
-
-  <h3 style="margin-top:0">
-    Aplicativo
-  </h3>
-
-  <label>
-    Valor recebido no mês
-  </label>
-
-  <input
-    id="appValue"
-    type="number"
-    step="0.01"
-    min="0"
-    oninput="setApp(this.value)"
+  <div
+    class="grid"
+    style="margin-top:12px"
   >
 
-</div>
+    <div class="metaBox">
+
+      <div class="metaTop">
+
+        <strong>
+          Personal
+        </strong>
+
+        <span id="personalMeta"></span>
+
+      </div>
+
+      <div class="progress">
+
+        <span
+          id="personalProgress"
+        ></span>
+
+      </div>
+
+      <div
+        class="note"
+        style="margin-top:7px"
+      >
+        Meta atual: 14 alunas — sem limite de cadastro.
+      </div>
+
+    </div>
 
 
-<!-- ENTRADAS EXTRAS -->
+    <div class="metaBox">
 
-<h3>Entradas Extras</h3>
+      <div class="metaTop">
 
-<div class="card">
+        <strong>
+          Consultoria online
+        </strong>
 
-<form onsubmit="addExtra(event)" class="form">
+        <span id="consultoriaMeta"></span>
 
-  <div>
-    <label>Data</label>
-    <input id="xd" type="date" required>
+      </div>
+
+      <div class="progress">
+
+        <span
+          id="consultoriaProgress"
+        ></span>
+
+      </div>
+
+      <div
+        class="note"
+        style="margin-top:7px"
+      >
+        Meta atual: 20 alunos — sem limite de cadastro.
+      </div>
+
+    </div>
+
   </div>
 
-  <div>
-    <label>Descrição</label>
-    <input id="xdesc" required>
+</section>
+
+
+<!-- =====================================================
+     ENTRADAS
+===================================================== -->
+
+<section id="entradas">
+
+  <h2 class="title">
+    Entradas
+  </h2>
+
+
+  <div class="card">
+
+    <div class="monthbar">
+
+      <button
+        class="secondary"
+        onclick="changeMonth(-1)"
+      >
+        ‹
+      </button>
+
+      <strong id="monthTitle"></strong>
+
+      <button
+        class="secondary"
+        onclick="changeMonth(1)"
+      >
+        ›
+      </button>
+
+    </div>
+
   </div>
 
-  <div>
-    <label>Valor</label>
+
+  <!-- PERSONAL + CONSULTORIA -->
+
+  <div id="studentSections"></div>
+
+
+  <!-- APLICATIVO -->
+
+  <div class="card">
+
+    <h3 style="margin-top:0">
+      Aplicativo
+    </h3>
+
+    <label>
+      Valor recebido no mês
+    </label>
+
     <input
-      id="xval"
+      id="appValue"
       type="number"
       step="0.01"
       min="0"
-      required
+      oninput="setApp(this.value)"
     >
+
   </div>
 
-  <div style="align-self:end">
-    <button>Adicionar entrada</button>
-  </div>
 
-</form>
+  <!-- ENTRADAS EXTRAS -->
 
-</div>
+  <h3>
+    Entradas Extras
+  </h3>
 
-<div class="card rows" id="extraList"></div>
+  <div class="card">
 
-</section>
-
-
-<!-- ================= SAÍDAS ================= -->
-
-<section>
-
-<h2 class="title">Saídas</h2>
-
-<div class="card">
-
-<form onsubmit="addExpense(event)" class="form">
-
-  <div>
-    <label>Data</label>
-    <input id="ed" type="date" required>
-  </div>
-
-  <div>
-    <label>Descrição</label>
-    <input id="edesc" required>
-  </div>
-
-  <div>
-    <label>Valor</label>
-    <input
-      id="eval"
-      type="number"
-      step="0.01"
-      min="0"
-      required
+    <form
+      onsubmit="addExtra(event)"
+      class="form"
     >
+
+      <div>
+
+        <label>
+          Data
+        </label>
+
+        <input
+          id="xd"
+          type="date"
+          required
+        >
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Descrição
+        </label>
+
+        <input
+          id="xdesc"
+          required
+        >
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Valor
+        </label>
+
+        <input
+          id="xval"
+          type="number"
+          step="0.01"
+          min="0"
+          required
+        >
+
+      </div>
+
+
+      <div style="align-self:end">
+
+        <button>
+          Adicionar entrada
+        </button>
+
+      </div>
+
+    </form>
+
   </div>
 
-  <div>
-    <label>Categoria</label>
 
-    <select id="ecat">
-      <option>Gastos fixos</option>
-      <option>Investimentos</option>
-      <option>Reserva de emergência</option>
-      <option>Outros</option>
-    </select>
-  </div>
-
-  <div>
-    <label>Forma</label>
-
-    <select id="eform">
-      <option>Pix</option>
-      <option>Dinheiro</option>
-    </select>
-  </div>
-
-  <div style="align-self:end">
-    <button>Adicionar saída</button>
-  </div>
-
-</form>
-
-</div>
-
-<div class="card rows" id="expenseList"></div>
+  <div
+    class="card rows"
+    id="extraList"
+  ></div>
 
 </section>
 
 
-<!-- ================= CARTÃO CASA ================= -->
+<!-- =====================================================
+     SAÍDAS
+===================================================== -->
 
-<section>
+<section id="saidas">
 
-<h2 class="title">Cartão Casa</h2>
-
-<div class="card">
-
-<form onsubmit="addCard(event,'casa')" class="form">
-
-  <div>
-    <label>Descrição</label>
-    <input id="ccdesc" required>
-  </div>
-
-  <div>
-    <label>Valor da parcela</label>
-    <input id="ccval" type="number" step="0.01" min="0" required>
-  </div>
-
-  <div>
-    <label>Primeiro mês</label>
-    <input id="ccmonth" type="month" required>
-  </div>
-
-  <div>
-    <label>Nº de parcelas</label>
-    <input id="ccparcelas" type="number" min="1" value="1" required>
-  </div>
-
-  <div style="align-self:end">
-    <button>Adicionar compra</button>
-  </div>
-
-</form>
-
-</div>
-
-<div class="card rows" id="cardCasaList"></div>
-
-</section>
+  <h2 class="title">
+    Saídas
+  </h2>
 
 
-<!-- ================= CARTÃO PESSOAL ================= -->
+  <div class="card">
 
-<section>
-
-<h2 class="title">Cartão Pessoal</h2>
-
-<div class="card">
-
-<form onsubmit="addCard(event,'pessoal')" class="form">
-
-  <div>
-    <label>Descrição</label>
-    <input id="cpdesc" required>
-  </div>
-
-  <div>
-    <label>Valor da parcela</label>
-    <input id="cpval" type="number" step="0.01" min="0" required>
-  </div>
-
-  <div>
-    <label>Primeiro mês</label>
-    <input id="cpmonth" type="month" required>
-  </div>
-
-  <div>
-    <label>Nº de parcelas</label>
-    <input id="cpparcelas" type="number" min="1" value="1" required>
-  </div>
-
-  <div style="align-self:end">
-    <button>Adicionar compra</button>
-  </div>
-
-</form>
-
-</div>
-
-<div class="card rows" id="cardPessoalList"></div>
-
-</section>
-
-
-<!-- ================= RECORRENTES ================= -->
-
-<section>
-
-<h2 class="title">Recorrentes</h2>
-
-<div class="card">
-
-<form onsubmit="addRecurring(event)" class="form">
-
-  <div>
-    <label>Descrição</label>
-    <input id="rdesc" required>
-  </div>
-
-  <div>
-    <label>Valor mensal</label>
-    <input id="rval" type="number" step="0.01" min="0" required>
-  </div>
-
-  <div>
-    <label>Categoria</label>
-
-    <select id="rcat">
-      <option>Gastos fixos</option>
-      <option>Cartão Casa</option>
-      <option>Cartão Pessoal</option>
-    </select>
-  </div>
-
-  <div style="align-self:end">
-    <button>Adicionar recorrente</button>
-  </div>
-
-</form>
-
-</div>
-
-<div class="card rows" id="recurringList"></div>
-
-</section>
-
-
-<!-- ================= RESERVA ================= -->
-
-<section>
-
-<h2 class="title">Reserva de emergência</h2>
-
-<div class="card">
-
-<form onsubmit="addReserve(event)" class="form">
-
-  <div>
-    <label>Valor reservado neste mês</label>
-
-    <input
-      id="rr"
-      type="number"
-      step="0.01"
-      min="0"
-      required
+    <form
+      onsubmit="addExpense(event)"
+      class="form"
     >
+
+      <div>
+
+        <label>
+          Data
+        </label>
+
+        <input
+          id="ed"
+          type="date"
+          required
+        >
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Descrição
+        </label>
+
+        <input
+          id="edesc"
+          required
+        >
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Valor
+        </label>
+
+        <input
+          id="eval"
+          type="number"
+          step="0.01"
+          min="0"
+          required
+        >
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Categoria
+        </label>
+
+        <select id="ecat">
+
+          <option>
+            Gastos fixos
+          </option>
+
+          <option>
+            Investimentos
+          </option>
+
+          <option>
+            Reserva de emergência
+          </option>
+
+          <option>
+            Outros
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Forma
+        </label>
+
+        <select id="eform">
+
+          <option>
+            Pix
+          </option>
+
+          <option>
+            Dinheiro
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div style="align-self:end">
+
+        <button>
+          Adicionar saída
+        </button>
+
+      </div>
+
+    </form>
+
   </div>
 
-  <div style="align-self:end">
-    <button>Registrar reserva</button>
-  </div>
 
-</form>
-
-</div>
-
-<div class="card">
-  <strong>Total acumulado:</strong>
-  <span id="reserveTotal"></span>
-</div>
+  <div
+    class="card rows"
+    id="expenseList"
+  ></div>
 
 </section>
+
+
+<!-- =====================================================
+     CARTÃO CASA
+===================================================== -->
+
+<section id="cartaoCasa">
+
+  <h2 class="title">
+    Cartão Casa
+  </h2>
+
+
+  <div class="card">
+
+    <form
+      onsubmit="addCard(event,'casa')"
+      class="form"
+    >
+
+      <div>
+
+        <label>
+          Descrição
+        </label>
+
+        <input
+          id="ccdesc"
+          required
+        >
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Valor da parcela
+        </label>
+
+        <input
+          id="ccval"
+          type="number"
+          step="0.01"
+          min="0"
+          required
+        >
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Primeiro mês
+        </label>
+
+        <input
+          id="ccmonth"
+          type="month"
+          required
+        >
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Nº de parcelas
+        </label>
+
+        <input
+          id="ccparcelas"
+          type="number"
+          min="1"
+          value="1"
+          required
+        >
+
+      </div>
+
+
+      <div style="align-self:end">
+
+        <button>
+          Adicionar compra
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+
+  <div
+    class="card rows"
+    id="cardCasaList"
+  ></div>
+
+</section>
+
+
+<!-- =====================================================
+     CARTÃO PESSOAL
+===================================================== -->
+
+<section id="cartaoPessoal">
+
+  <h2 class="title">
+    Cartão Pessoal
+  </h2>
+
+
+  <div class="card">
+
+    <form
+      onsubmit="addCard(event,'pessoal')"
+      class="form"
+    >
+
+      <div>
+
+        <label>
+          Descrição
+        </label>
+
+        <input
+          id="cpdesc"
+          required
+        >
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Valor da parcela
+        </label>
+
+        <input
+          id="cpval"
+          type="number"
+          step="0.01"
+          min="0"
+          required
+        >
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Primeiro mês
+        </label>
+
+        <input
+          id="cpmonth"
+          type="month"
+          required
+        >
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Nº de parcelas
+        </label>
+
+        <input
+          id="cpparcelas"
+          type="number"
+          min="1"
+          value="1"
+          required
+        >
+
+      </div>
+
+
+      <div style="align-self:end">
+
+        <button>
+          Adicionar compra
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+
+  <div
+    class="card rows"
+    id="cardPessoalList"
+  ></div>
+
+</section>
+
+
+<!-- =====================================================
+     RECORRENTES
+===================================================== -->
+
+<section id="recorrentes">
+
+  <h2 class="title">
+    Recorrentes
+  </h2>
+
+
+  <div class="card">
+
+    <form
+      onsubmit="addRecurring(event)"
+      class="form"
+    >
+
+      <div>
+
+        <label>
+          Descrição
+        </label>
+
+        <input
+          id="rdesc"
+          required
+        >
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Valor mensal
+        </label>
+
+        <input
+          id="rval"
+          type="number"
+          step="0.01"
+          min="0"
+          required
+        >
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Categoria
+        </label>
+
+        <select id="rcat">
+
+          <option>
+            Gastos fixos
+          </option>
+
+          <option>
+            Cartão Casa
+          </option>
+
+          <option>
+            Cartão Pessoal
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div style="align-self:end">
+
+        <button>
+          Adicionar recorrente
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+
+  <div
+    class="card rows"
+    id="recurringList"
+  ></div>
+
+</section>
+
+
+<!-- =====================================================
+     RESERVA
+===================================================== -->
+
+<section id="reserva">
+
+  <h2 class="title">
+    Reserva de emergência
+  </h2>
+
+
+  <div class="card">
+
+    <form
+      onsubmit="addReserve(event)"
+      class="form"
+    >
+
+      <div>
+
+        <label>
+          Valor reservado neste mês
+        </label>
+
+        <input
+          id="rr"
+          type="number"
+          step="0.01"
+          min="0"
+          required
+        >
+
+      </div>
+
+
+      <div style="align-self:end">
+
+        <button>
+          Registrar reserva
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+
+  <div class="card">
+
+    <strong>
+      Total acumulado:
+    </strong>
+
+    <span id="reserveTotal"></span>
+
+  </div>
+
+</section>
+
+
+<div class="footer">
+  PersonalFin • dados salvos neste aparelho
+</div>
 
 </main>
 
 
 <script>
 
-/* =========================================================
+/* =====================================================
    CONFIGURAÇÃO
-========================================================= */
+===================================================== */
 
-const STORAGE_KEY = "personalfin_complete_v1";
+const STORAGE_KEY =
+  "personalfin_complete_v1";
 
 const months = [
-  "Jan","Fev","Mar","Abr","Mai","Jun",
-  "Jul","Ago","Set","Out","Nov","Dez"
+  "Jan",
+  "Fev",
+  "Mar",
+  "Abr",
+  "Mai",
+  "Jun",
+  "Jul",
+  "Ago",
+  "Set",
+  "Out",
+  "Nov",
+  "Dez"
 ];
 
-const now = new Date();
+const now =
+  new Date();
 
-let db = loadDatabase();
+let db =
+  loadDatabase();
 
 let currentMonthIndex =
   Number.isInteger(db.monthIndex)
-  ? db.monthIndex
-  : now.getMonth();
+    ? db.monthIndex
+    : now.getMonth();
 
 let currentYear =
   Number.isInteger(db.year)
-  ? db.year
-  : now.getFullYear();
+    ? db.year
+    : now.getFullYear();
 
 
-/* =========================================================
+/* =====================================================
    UTILIDADES
-========================================================= */
+===================================================== */
 
-function n(v){
-  const x = Number(v);
-  return Number.isFinite(x) ? x : 0;
+function n(value){
+
+  const x =
+    Number(value);
+
+  return Number.isFinite(x)
+    ? x
+    : 0;
+
 }
 
-function money(v){
-  return n(v).toLocaleString("pt-BR",{
-    style:"currency",
-    currency:"BRL"
-  });
+
+function money(value){
+
+  return n(value)
+    .toLocaleString(
+      "pt-BR",
+      {
+        style:"currency",
+        currency:"BRL"
+      }
+    );
+
 }
+
 
 function id(){
-  return Date.now().toString(36) +
-         Math.random().toString(36).slice(2);
+
+  return (
+    Date.now().toString(36) +
+    Math.random()
+      .toString(36)
+      .slice(2)
+  );
+
 }
+
 
 function ym(){
-  return currentYear + "-" +
-    String(currentMonthIndex + 1).padStart(2,"0");
-}
 
-
-/* =========================================================
-   BANCO
-========================================================= */
-
-function emptyStudents(){
-
-  return {
-    personal:[],
-    consultoria:[]
-  };
+  return (
+    currentYear +
+    "-" +
+    String(
+      currentMonthIndex + 1
+    ).padStart(2,"0")
+  );
 
 }
 
+
+function escapeHtml(value){
+
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+/* =====================================================
+   BANCO PADRÃO
+===================================================== */
 
 function makeStudent(name){
 
   return {
+
     id:id(),
+
     name:name,
+
     values:Array(12).fill(0)
+
   };
 
 }
@@ -766,11 +1351,14 @@ function defaultDatabase(){
 
   return {
 
-    monthIndex:now.getMonth(),
+    monthIndex:
+      now.getMonth(),
 
-    year:now.getFullYear(),
+    year:
+      now.getFullYear(),
 
     students:{
+
       personal:[
         "Juliana",
         "João",
@@ -783,7 +1371,8 @@ function defaultDatabase(){
         "Luís Lunguinho"
       ].map(makeStudent),
 
-      consultoria:[].map(makeStudent)
+      consultoria:[]
+
     },
 
     app:{},
@@ -804,142 +1393,219 @@ function defaultDatabase(){
 }
 
 
-/* =========================================================
+/* =====================================================
    MIGRAÇÃO
-========================================================= */
+===================================================== */
 
 function migrate(old){
 
-  const base = defaultDatabase();
+  const base =
+    defaultDatabase();
 
-  if(!old || typeof old !== "object"){
+  if(
+    !old ||
+    typeof old !== "object"
+  ){
     return base;
   }
 
-  /* mantém dados gerais */
 
   if(old.entries){
-    base.entries = old.entries;
+    base.entries =
+      old.entries;
   }
+
 
   if(old.cards){
+
     base.cards = {
-      casa:Array.isArray(old.cards.casa)
-        ? old.cards.casa : [],
-      pessoal:Array.isArray(old.cards.pessoal)
-        ? old.cards.pessoal : []
+
+      casa:
+        Array.isArray(old.cards.casa)
+          ? old.cards.casa
+          : [],
+
+      pessoal:
+        Array.isArray(old.cards.pessoal)
+          ? old.cards.pessoal
+          : []
+
     };
+
   }
+
 
   if(old.recurring){
-    base.recurring = old.recurring;
+    base.recurring =
+      old.recurring;
   }
 
+
   if(old.reserve){
-    base.reserve = old.reserve;
+    base.reserve =
+      old.reserve;
   }
+
 
   if(old.app){
 
-    if(typeof old.app === "object"){
-      base.app = old.app;
-    }
+    base.app =
+      typeof old.app === "object"
+        ? old.app
+        : {};
 
   }
 
-  /* mês */
 
-  if(Number.isInteger(old.monthIndex)){
-    base.monthIndex = old.monthIndex;
+  if(
+    Number.isInteger(
+      old.monthIndex
+    )
+  ){
+    base.monthIndex =
+      old.monthIndex;
   }
 
-  if(Number.isInteger(old.year)){
-    base.year = old.year;
+
+  if(
+    Number.isInteger(
+      old.year
+    )
+  ){
+    base.year =
+      old.year;
   }
 
-  /* =====================================================
-     NOVO FORMATO DE ALUNOS
-  ===================================================== */
+
+  /* NOVO FORMATO */
 
   if(
     old.students &&
-    Array.isArray(old.students.personal)
+    Array.isArray(
+      old.students.personal
+    )
   ){
 
     base.students.personal =
-      old.students.personal.map(s => ({
-        id:s.id || id(),
-        name:s.name || "Sem nome",
-        values:Array.isArray(s.values)
-          ? [...s.values,...Array(12)].slice(0,12).map(n)
-          : Array(12).fill(0)
-      }));
+      old.students.personal.map(
+        student => ({
+
+          id:
+            student.id ||
+            id(),
+
+          name:
+            student.name ||
+            "Sem nome",
+
+          values:
+            Array.isArray(
+              student.values
+            )
+              ? Array.from(
+                  {length:12},
+                  (_,i)=>
+                    n(
+                      student.values[i]
+                    )
+                )
+              : Array(12).fill(0)
+
+        })
+      );
 
   }
 
 
   if(
     old.students &&
-    Array.isArray(old.students.consultoria)
+    Array.isArray(
+      old.students.consultoria
+    )
   ){
 
     base.students.consultoria =
-      old.students.consultoria.map(s => ({
-        id:s.id || id(),
-        name:s.name || "Sem nome",
-        values:Array.isArray(s.values)
-          ? [...s.values,...Array(12)].slice(0,12).map(n)
-          : Array(12).fill(0)
-      }));
+      old.students.consultoria.map(
+        student => ({
+
+          id:
+            student.id ||
+            id(),
+
+          name:
+            student.name ||
+            "Sem nome",
+
+          values:
+            Array.isArray(
+              student.values
+            )
+              ? Array.from(
+                  {length:12},
+                  (_,i)=>
+                    n(
+                      student.values[i]
+                    )
+                )
+              : Array(12).fill(0)
+
+        })
+      );
 
   }
 
 
-  /* =====================================================
-     FORMATO ANTIGO:
-     db.inputs.personal
-     db.inputs.consultoria
-     db.inputValues
-  ===================================================== */
+  /* FORMATO ANTIGO */
 
   if(old.inputs){
 
-    ["personal","consultoria"].forEach(type => {
+    [
+      "personal",
+      "consultoria"
+    ].forEach(type => {
 
       const names =
-        Array.isArray(old.inputs[type])
+        Array.isArray(
+          old.inputs[type]
+        )
           ? old.inputs[type]
           : [];
+
 
       if(names.length){
 
         base.students[type] =
-          names.map((name,i) => {
+          names.map(
+            (name,i)=>({
 
-            const values =
-              Array.from({length:12},(_,j) => {
-
-                if(old.inputValues){
-
-                  return n(
-                    old.inputValues[
-                      type+"_"+i+"_"+j
-                    ]
-                  );
-
-                }
-
-                return 0;
-
-              });
-
-            return {
               id:id(),
-              name:String(name),
-              values:values
-            };
 
-          });
+              name:String(name),
+
+              values:
+                Array.from(
+                  {length:12},
+                  (_,j)=>{
+
+                    if(
+                      old.inputValues
+                    ){
+
+                      return n(
+                        old.inputValues[
+                          type+"_"+i+"_"+j
+                        ]
+                      );
+
+                    }
+
+                    return 0;
+
+                  }
+                )
+
+            })
+          );
 
       }
 
@@ -958,7 +1624,10 @@ function loadDatabase(){
   try{
 
     const raw =
-      localStorage.getItem(STORAGE_KEY);
+      localStorage.getItem(
+        STORAGE_KEY
+      );
+
 
     if(!raw){
 
@@ -966,14 +1635,17 @@ function loadDatabase(){
 
     }
 
-    const old =
-      JSON.parse(raw);
 
-    return migrate(old);
+    return migrate(
+      JSON.parse(raw)
+    );
 
-  }catch(e){
+  }catch(error){
 
-    console.error(e);
+    console.error(
+      "Erro ao carregar dados:",
+      error
+    );
 
     return defaultDatabase();
 
@@ -982,15 +1654,21 @@ function loadDatabase(){
 }
 
 
-/* =========================================================
+/* =====================================================
    SALVAR
-========================================================= */
+===================================================== */
 
 function save(){
 
-  const positions =
+  const tableStates =
     [...document.querySelectorAll(".tablewrap")]
-      .map(el => el.scrollLeft);
+      .map(
+        element => ({
+          scrollLeft:
+            element.scrollLeft
+        })
+      );
+
 
   db.monthIndex =
     currentMonthIndex;
@@ -998,47 +1676,184 @@ function save(){
   db.year =
     currentYear;
 
+
   localStorage.setItem(
     STORAGE_KEY,
     JSON.stringify(db)
   );
 
+
   render();
+
 
   requestAnimationFrame(()=>{
 
     const tables =
-      [...document.querySelectorAll(".tablewrap")];
+      [...document.querySelectorAll(
+        ".tablewrap"
+      )];
 
-    tables.forEach((el,i)=>{
 
-      if(positions[i] !== undefined){
+    tables.forEach(
+      (element,index)=>{
 
-        el.scrollLeft =
-          positions[i];
+        if(
+          tableStates[index]
+        ){
 
-        setTimeout(()=>{
-          el.scrollLeft =
-            positions[i];
-        },50);
+          const position =
+            tableStates[index]
+              .scrollLeft;
 
-        setTimeout(()=>{
-          el.scrollLeft =
-            positions[i];
-        },150);
+
+          element.scrollLeft =
+            position;
+
+
+          setTimeout(
+            ()=>{
+              element.scrollLeft =
+                position;
+            },
+            50
+          );
+
+
+          setTimeout(
+            ()=>{
+              element.scrollLeft =
+                position;
+            },
+            150
+          );
+
+        }
 
       }
-
-    });
+    );
 
   });
 
 }
 
 
-/* =========================================================
+/* =====================================================
+   NAVEGAÇÃO
+===================================================== */
+
+function goToSection(sectionId){
+
+  const section =
+    document.getElementById(
+      sectionId
+    );
+
+  if(!section){
+    return;
+  }
+
+
+  section.scrollIntoView({
+    behavior:"smooth",
+    block:"start"
+  });
+
+
+  updateActiveTab(
+    sectionId
+  );
+
+}
+
+
+function updateActiveTab(sectionId){
+
+  document
+    .querySelectorAll(
+      "#mainNav button"
+    )
+    .forEach(button=>{
+
+      button.classList.toggle(
+        "active",
+        button.dataset.target === sectionId
+      );
+
+    });
+
+}
+
+
+function setupNavigation(){
+
+  const sections =
+    [
+      "painel",
+      "entradas",
+      "saidas",
+      "cartaoCasa",
+      "cartaoPessoal",
+      "recorrentes",
+      "reserva"
+    ]
+    .map(
+      id=>document.getElementById(id)
+    )
+    .filter(Boolean);
+
+
+  const observer =
+    new IntersectionObserver(
+      entries=>{
+
+        const visible =
+          entries
+            .filter(
+              entry =>
+                entry.isIntersecting
+            )
+            .sort(
+              (a,b)=>
+                b.intersectionRatio -
+                a.intersectionRatio
+            );
+
+
+        if(visible.length){
+
+          updateActiveTab(
+            visible[0]
+              .target.id
+          );
+
+        }
+
+      },
+      {
+        rootMargin:
+          "-150px 0px -55% 0px",
+        threshold:
+          [0.1,0.3,0.6]
+      }
+    );
+
+
+  sections.forEach(
+    section =>
+      observer.observe(section)
+  );
+
+
+  updateActiveTab(
+    "painel"
+  );
+
+}
+
+
+/* =====================================================
    ALUNOS
-========================================================= */
+===================================================== */
 
 function studentTable(type){
 
@@ -1050,139 +1865,183 @@ function studentTable(type){
       ? "Personal"
       : "Consultoria online";
 
+
   const students =
     db.students[type] || [];
 
+
   let html = `
 
-  <div class="card">
+    <div class="card">
 
-    <h3 style="margin-top:0">
-      ${title}
-    </h3>
+      <h3 style="margin-top:0">
+        ${title}
+      </h3>
 
-    <div class="tablewrap">
+      <div class="tablewrap">
 
-      <table>
+        <table>
 
-        <thead>
+          <thead>
 
-          <tr>
+            <tr>
 
-            <th>
-              ${isPersonal ? "Aluna" : "Aluno"}
-            </th>
+              <th>
+                ${
+                  isPersonal
+                    ? "Aluna"
+                    : "Aluno"
+                }
+              </th>
 
-            ${months.map(m =>
-              `<th>${m}</th>`
-            ).join("")}
+              ${
+                months.map(
+                  month =>
+                    `<th>${month}</th>`
+                ).join("")
+              }
 
-          </tr>
+            </tr>
 
-        </thead>
+          </thead>
 
-        <tbody>
+          <tbody>
+
   `;
 
 
-  students.forEach((student,i)=>{
+  students.forEach(
+    (student,index)=>{
 
-    html += `
+      html += `
 
-      <tr>
-
-        <td>
-          <strong>${escapeHtml(student.name)}</strong>
-        </td>
-
-        ${months.map((m,j)=>`
+        <tr>
 
           <td>
-
-            <input
-              type="number"
-              step="0.01"
-              min="0"
-              value="${n(student.values[j])}"
-              onchange="
-                setStudentValue(
-                  '${type}',
-                  ${i},
-                  ${j},
-                  this.value
-                )
-              "
-            >
-
+            <strong>
+              ${escapeHtml(
+                student.name
+              )}
+            </strong>
           </td>
 
-        `).join("")}
+          ${
+            months.map(
+              (month,monthIndex)=>`
 
-      </tr>
+                <td>
 
-    `;
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value="${
+                      n(
+                        student.values[
+                          monthIndex
+                        ]
+                      )
+                    }"
+                    onchange="
+                      setStudentValue(
+                        '${type}',
+                        ${index},
+                        ${monthIndex},
+                        this.value
+                      )
+                    "
+                  >
 
-  });
+                </td>
+
+              `
+            ).join("")
+          }
+
+        </tr>
+
+      `;
+
+    }
+  );
 
 
-  /* =====================================================
-     LINHA DE ADICIONAR
-     SEM LIMITE
-  ===================================================== */
+  /* BOTÃO DE ADICIONAR */
 
   html += `
 
-      <tr class="addStudentRow">
+        <tr class="addStudentRow">
 
-        <td colspan="13">
+          <td colspan="13">
 
-          <button
-            type="button"
-            onclick="addStudent('${type}')"
-          >
-            ＋ Adicionar ${isPersonal
-              ? "nova aluna"
-              : "novo aluno"}
-          </button>
+            <button
+              type="button"
+              onclick="
+                addStudent('${type}')
+              "
+            >
 
-        </td>
+              ＋ Adicionar ${
+                isPersonal
+                  ? "nova aluna"
+                  : "novo aluno"
+              }
 
-      </tr>
+            </button>
 
-
-      <tr class="totalRow">
-
-        <td>
-          TOTAL ${isPersonal
-            ? "PERSONAL"
-            : "CONSULTORIA"}
-        </td>
-
-        ${months.map((m,j)=>`
-
-          <td>
-            ${money(
-              students.reduce(
-                (s,student)=>
-                  s+n(student.values[j]),
-                0
-              )
-            )}
           </td>
 
-        `).join("")}
+        </tr>
 
-      </tr>
 
-        </tbody>
+        <tr class="totalRow">
 
-      </table>
+          <td>
+            TOTAL ${
+              isPersonal
+                ? "PERSONAL"
+                : "CONSULTORIA"
+            }
+          </td>
+
+          ${
+            months.map(
+              (month,monthIndex)=>{
+
+                const total =
+                  students.reduce(
+                    (sum,student)=>
+                      sum +
+                      n(
+                        student.values[
+                          monthIndex
+                        ]
+                      ),
+                    0
+                  );
+
+                return `
+                  <td>
+                    ${money(total)}
+                  </td>
+                `;
+
+              }
+            ).join("")
+          }
+
+        </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
 
     </div>
 
-  </div>
-
   `;
+
 
   return html;
 
@@ -1191,23 +2050,32 @@ function studentTable(type){
 
 function addStudent(type){
 
-  const personal =
+  const isPersonal =
     type === "personal";
+
 
   const name =
     prompt(
-      personal
+      isPersonal
         ? "Nome da nova aluna:"
         : "Nome do novo aluno:"
     );
 
-  if(!name || !name.trim()){
+
+  if(
+    !name ||
+    !name.trim()
+  ){
     return;
   }
 
+
   db.students[type].push(
-    makeStudent(name.trim())
+    makeStudent(
+      name.trim()
+    )
   );
+
 
   save();
 
@@ -1221,55 +2089,76 @@ function setStudentValue(
   value
 ){
 
-  if(!db.students[type]){
+  if(
+    !db.students[type] ||
+    !db.students[type][studentIndex]
+  ){
     return;
   }
 
-  if(!db.students[type][studentIndex]){
-    return;
-  }
 
-  db.students[type][studentIndex]
-    .values[monthIndex] = n(value);
+  db.students[type]
+    [studentIndex]
+    .values[monthIndex] =
+      n(value);
+
 
   save();
 
 }
 
 
-/* =========================================================
+/* =====================================================
    APLICATIVO
-========================================================= */
+===================================================== */
 
 function setApp(value){
 
-  db.app[ym()] = n(value);
+  db.app[ym()] =
+    n(value);
 
   save();
 
 }
 
 
-/* =========================================================
+/* =====================================================
    ENTRADAS EXTRAS
-========================================================= */
+===================================================== */
 
-function addExtra(ev){
+function addExtra(event){
 
-  ev.preventDefault();
+  event.preventDefault();
+
 
   const date =
-    document.getElementById("xd").value;
+    document.getElementById(
+      "xd"
+    ).value;
+
 
   const desc =
-    document.getElementById("xdesc").value.trim();
+    document.getElementById(
+      "xdesc"
+    ).value.trim();
+
 
   const value =
-    n(document.getElementById("xval").value);
+    n(
+      document.getElementById(
+        "xval"
+      ).value
+    );
 
-  if(!date || !desc || !value){
+
+  if(
+    !date ||
+    !desc ||
+    !value
+  ){
     return;
   }
+
 
   db.entries.push({
 
@@ -1291,39 +2180,63 @@ function addExtra(ev){
 
   });
 
-  ev.target.reset();
+
+  event.target.reset();
 
   save();
 
 }
 
 
-/* =========================================================
+/* =====================================================
    SAÍDAS
-========================================================= */
+===================================================== */
 
-function addExpense(ev){
+function addExpense(event){
 
-  ev.preventDefault();
+  event.preventDefault();
+
 
   const date =
-    document.getElementById("ed").value;
+    document.getElementById(
+      "ed"
+    ).value;
+
 
   const desc =
-    document.getElementById("edesc").value.trim();
+    document.getElementById(
+      "edesc"
+    ).value.trim();
+
 
   const value =
-    n(document.getElementById("eval").value);
+    n(
+      document.getElementById(
+        "eval"
+      ).value
+    );
+
 
   const category =
-    document.getElementById("ecat").value;
+    document.getElementById(
+      "ecat"
+    ).value;
+
 
   const form =
-    document.getElementById("eform").value;
+    document.getElementById(
+      "eform"
+    ).value;
 
-  if(!date || !desc || !value){
+
+  if(
+    !date ||
+    !desc ||
+    !value
+  ){
     return;
   }
+
 
   db.entries.push({
 
@@ -1345,67 +2258,108 @@ function addExpense(ev){
 
   });
 
-  ev.target.reset();
+
+  event.target.reset();
 
   save();
 
 }
 
 
-/* =========================================================
+/* =====================================================
    CARTÕES
-========================================================= */
+===================================================== */
 
-function addCard(ev,which){
+function addCard(event,which){
 
-  ev.preventDefault();
+  event.preventDefault();
+
 
   const prefix =
     which === "casa"
       ? "cc"
       : "cp";
 
+
   const desc =
-    document.getElementById(prefix+"desc")
-      .value.trim();
+    document.getElementById(
+      prefix+"desc"
+    ).value.trim();
+
 
   const value =
-    n(document.getElementById(prefix+"val").value);
+    n(
+      document.getElementById(
+        prefix+"val"
+      ).value
+    );
+
 
   const month =
-    document.getElementById(prefix+"month").value;
+    document.getElementById(
+      prefix+"month"
+    ).value;
+
 
   const parcelas =
     Math.max(
       1,
       parseInt(
-        document.getElementById(prefix+"parcelas").value
+        document.getElementById(
+          prefix+"parcelas"
+        ).value
       ) || 1
     );
 
-  if(!desc || !value || !month){
+
+  if(
+    !desc ||
+    !value ||
+    !month
+  ){
     return;
   }
 
+
   const monthsList = [];
 
-  let y =
-    Number(month.slice(0,4));
 
-  let m =
-    Number(month.slice(5,7))-1;
+  const firstYear =
+    Number(
+      month.slice(0,4)
+    );
 
-  for(let i=0;i<parcelas;i++){
 
-    const d =
-      new Date(y,m+i,1);
+  const firstMonth =
+    Number(
+      month.slice(5,7)
+    ) - 1;
+
+
+  for(
+    let i=0;
+    i<parcelas;
+    i++
+  ){
+
+    const date =
+      new Date(
+        firstYear,
+        firstMonth+i,
+        1
+      );
+
 
     monthsList.push(
-      d.getFullYear()+"-"+
-      String(d.getMonth()+1).padStart(2,"0")
+      date.getFullYear() +
+      "-" +
+      String(
+        date.getMonth()+1
+      ).padStart(2,"0")
     );
 
   }
+
 
   db.cards[which].push({
 
@@ -1423,34 +2377,50 @@ function addCard(ev,which){
 
   });
 
-  ev.target.reset();
+
+  event.target.reset();
 
   save();
 
 }
 
 
-/* =========================================================
+/* =====================================================
    RECORRENTES
-========================================================= */
+===================================================== */
 
-function addRecurring(ev){
+function addRecurring(event){
 
-  ev.preventDefault();
+  event.preventDefault();
+
 
   const desc =
-    document.getElementById("rdesc")
-      .value.trim();
+    document.getElementById(
+      "rdesc"
+    ).value.trim();
+
 
   const value =
-    n(document.getElementById("rval").value);
+    n(
+      document.getElementById(
+        "rval"
+      ).value
+    );
+
 
   const category =
-    document.getElementById("rcat").value;
+    document.getElementById(
+      "rcat"
+    ).value;
 
-  if(!desc || !value){
+
+  if(
+    !desc ||
+    !value
+  ){
     return;
   }
+
 
   db.recurring.push({
 
@@ -1464,27 +2434,35 @@ function addRecurring(ev){
 
   });
 
-  ev.target.reset();
+
+  event.target.reset();
 
   save();
 
 }
 
 
-/* =========================================================
+/* =====================================================
    RESERVA
-========================================================= */
+===================================================== */
 
-function addReserve(ev){
+function addReserve(event){
 
-  ev.preventDefault();
+  event.preventDefault();
+
 
   const value =
-    n(document.getElementById("rr").value);
+    n(
+      document.getElementById(
+        "rr"
+      ).value
+    );
+
 
   if(!value){
     return;
   }
+
 
   db.reserve.push({
 
@@ -1496,24 +2474,30 @@ function addReserve(ev){
 
   });
 
-  ev.target.reset();
+
+  event.target.reset();
 
   save();
 
 }
 
 
-/* =========================================================
+/* =====================================================
    CÁLCULOS
-========================================================= */
+===================================================== */
 
 function personalMonth(){
 
   return (
     db.students.personal || []
   ).reduce(
-    (s,student)=>
-      s+n(student.values[currentMonthIndex]),
+    (sum,student)=>
+      sum +
+      n(
+        student.values[
+          currentMonthIndex
+        ]
+      ),
     0
   );
 
@@ -1525,8 +2509,13 @@ function consultoriaMonth(){
   return (
     db.students.consultoria || []
   ).reduce(
-    (s,student)=>
-      s+n(student.values[currentMonthIndex]),
+    (sum,student)=>
+      sum +
+      n(
+        student.values[
+          currentMonthIndex
+        ]
+      ),
     0
   );
 
@@ -1537,13 +2526,15 @@ function extraIncome(){
 
   return db.entries
 
-    .filter(e =>
-      e.ym === ym() &&
-      e.type === "entrada"
+    .filter(
+      entry =>
+        entry.ym === ym() &&
+        entry.type === "entrada"
     )
 
     .reduce(
-      (s,e)=>s+n(e.amount),
+      (sum,entry)=>
+        sum+n(entry.amount),
       0
     );
 
@@ -1576,51 +2567,66 @@ function expenses(){
   let total = 0;
 
 
-  total += db.entries
+  total +=
+    db.entries
 
-    .filter(e =>
-      e.ym === ym() &&
-      e.type === "saida"
-    )
+      .filter(
+        entry =>
+          entry.ym === ym() &&
+          entry.type === "saida"
+      )
 
-    .reduce(
-      (s,e)=>s+n(e.amount),
-      0
-    );
-
-
-  total += db.cards.casa
-
-    .filter(c =>
-      c.months &&
-      c.months.includes(ym())
-    )
-
-    .reduce(
-      (s,c)=>s+n(c.value),
-      0
-    );
+      .reduce(
+        (sum,entry)=>
+          sum+n(entry.amount),
+        0
+      );
 
 
-  total += db.cards.pessoal
+  total +=
+    db.cards.casa
 
-    .filter(c =>
-      c.months &&
-      c.months.includes(ym())
-    )
+      .filter(
+        card =>
+          card.months &&
+          card.months.includes(
+            ym()
+          )
+      )
 
-    .reduce(
-      (s,c)=>s+n(c.value),
-      0
-    );
+      .reduce(
+        (sum,card)=>
+          sum+n(card.value),
+        0
+      );
 
 
-  total += db.recurring
+  total +=
+    db.cards.pessoal
 
-    .reduce(
-      (s,r)=>s+n(r.value),
-      0
-    );
+      .filter(
+        card =>
+          card.months &&
+          card.months.includes(
+            ym()
+          )
+      )
+
+      .reduce(
+        (sum,card)=>
+          sum+n(card.value),
+        0
+      );
+
+
+  total +=
+    db.recurring
+
+      .reduce(
+        (sum,item)=>
+          sum+n(item.value),
+        0
+      );
 
 
   return total;
@@ -1631,42 +2637,54 @@ function expenses(){
 function reserveTotal(){
 
   return db.reserve.reduce(
-    (s,r)=>s+n(r.value),
+    (sum,item)=>
+      sum+n(item.value),
     0
   );
 
 }
 
 
-/* =========================================================
+/* =====================================================
    RENDER
-========================================================= */
+===================================================== */
 
 function render(){
+
+  /* MÊS */
 
   document.getElementById(
     "monthTitle"
   ).textContent =
-    months[currentMonthIndex] +
+    months[
+      currentMonthIndex
+    ] +
     " " +
     currentYear;
 
 
-  /* ALUNOS */
+  /* TABELAS */
 
   document.getElementById(
     "studentSections"
   ).innerHTML =
 
-    studentTable("personal") +
+    studentTable(
+      "personal"
+    ) +
 
-    studentTable("consultoria");
+    studentTable(
+      "consultoria"
+    );
 
 
   /* APLICATIVO */
 
   const app =
-    document.getElementById("appValue");
+    document.getElementById(
+      "appValue"
+    );
+
 
   if(app){
 
@@ -1676,16 +2694,21 @@ function render(){
   }
 
 
-  /* MÉTRICAS */
+  /* FINANCEIRO */
 
   const inc =
     income();
 
+
   const out =
     expenses();
 
+
   const available =
-    Math.max(0,inc-out);
+    Math.max(
+      0,
+      inc-out
+    );
 
 
   document.getElementById(
@@ -1738,7 +2761,9 @@ function render(){
       </div>
 
       <div class="big">
-        ${money(reserveTotal())}
+        ${money(
+          reserveTotal()
+        )}
       </div>
 
     </div>
@@ -1751,6 +2776,7 @@ function render(){
   const personalCount =
     db.students.personal.length;
 
+
   const consultoriaCount =
     db.students.consultoria.length;
 
@@ -1758,13 +2784,15 @@ function render(){
   document.getElementById(
     "personalMeta"
   ).textContent =
-    personalCount + " / 14";
+    personalCount +
+    " / 14";
 
 
   document.getElementById(
     "consultoriaMeta"
   ).textContent =
-    consultoriaCount + " / 20";
+    consultoriaCount +
+    " / 20";
 
 
   document.getElementById(
@@ -1773,7 +2801,8 @@ function render(){
     Math.min(
       100,
       personalCount / 14 * 100
-    ) + "%";
+    ) +
+    "%";
 
 
   document.getElementById(
@@ -1782,156 +2811,244 @@ function render(){
     Math.min(
       100,
       consultoriaCount / 20 * 100
-    ) + "%";
+    ) +
+    "%";
 
 
   renderExtras();
+
   renderExpenses();
+
   renderCards("casa");
+
   renderCards("pessoal");
+
   renderRecurring();
 
 
   document.getElementById(
     "reserveTotal"
   ).textContent =
-    money(reserveTotal());
+    money(
+      reserveTotal()
+    );
 
 }
 
 
-/* =========================================================
-   LISTAS
-========================================================= */
+/* =====================================================
+   ENTRADAS EXTRAS
+===================================================== */
 
 function renderExtras(){
 
   const list =
-    document.getElementById("extraList");
-
-  const items =
-    db.entries.filter(e =>
-      e.type === "entrada" &&
-      e.ym === ym()
+    document.getElementById(
+      "extraList"
     );
 
+
+  const items =
+    db.entries.filter(
+      entry =>
+        entry.type === "entrada" &&
+        entry.ym === ym()
+    );
+
+
+  if(!items.length){
+
+    list.innerHTML = `
+      <span class="note">
+        Nenhuma entrada extra neste mês.
+      </span>
+    `;
+
+    return;
+
+  }
+
+
   list.innerHTML =
-    items.length
-      ? items.map(e=>`
+    items.map(
+      entry => `
 
         <div class="row">
 
           <div>
+
             <strong>
-              ${escapeHtml(e.desc)}
+              ${escapeHtml(
+                entry.desc
+              )}
             </strong>
 
             <small>
-              ${e.date || ""}
+              ${entry.date || ""}
             </small>
+
           </div>
 
           <strong class="green">
-            ${money(e.amount)}
+            ${money(
+              entry.amount
+            )}
           </strong>
 
         </div>
 
-      `).join("")
-      : `<span class="note">
-          Nenhuma entrada extra neste mês.
-         </span>`;
+      `
+    ).join("");
 
 }
 
+
+/* =====================================================
+   SAÍDAS
+===================================================== */
 
 function renderExpenses(){
 
   const list =
-    document.getElementById("expenseList");
-
-  const items =
-    db.entries.filter(e =>
-      e.type === "saida" &&
-      e.ym === ym()
+    document.getElementById(
+      "expenseList"
     );
 
+
+  const items =
+    db.entries.filter(
+      entry =>
+        entry.type === "saida" &&
+        entry.ym === ym()
+    );
+
+
+  if(!items.length){
+
+    list.innerHTML = `
+      <span class="note">
+        Nenhuma saída lançada neste mês.
+      </span>
+    `;
+
+    return;
+
+  }
+
+
   list.innerHTML =
-    items.length
-      ? items.map(e=>`
+    items.map(
+      entry => `
 
         <div class="row">
 
           <div>
+
             <strong>
-              ${escapeHtml(e.desc)}
+              ${escapeHtml(
+                entry.desc
+              )}
             </strong>
 
             <small>
-              ${e.date || ""}
+              ${entry.date || ""}
               •
-              ${escapeHtml(e.category || "")}
+              ${escapeHtml(
+                entry.category || ""
+              )}
             </small>
+
           </div>
 
           <strong class="red">
-            ${money(e.amount)}
+            ${money(
+              entry.amount
+            )}
           </strong>
 
         </div>
 
-      `).join("")
-      : `<span class="note">
-          Nenhuma saída lançada neste mês.
-         </span>`;
+      `
+    ).join("");
 
 }
 
 
+/* =====================================================
+   CARTÕES
+===================================================== */
+
 function renderCards(which){
 
-  const idName =
+  const elementId =
     which === "casa"
       ? "cardCasaList"
       : "cardPessoalList";
 
+
   const list =
-    document.getElementById(idName);
+    document.getElementById(
+      elementId
+    );
+
 
   const cards =
     db.cards[which] || [];
 
+
+  if(!cards.length){
+
+    list.innerHTML = `
+      <span class="note">
+        Nenhuma compra cadastrada.
+      </span>
+    `;
+
+    return;
+
+  }
+
+
   list.innerHTML =
-    cards.length
-      ? cards.map(c=>`
+    cards.map(
+      card => `
 
         <div class="row">
 
           <div>
 
             <strong>
-              ${escapeHtml(c.desc)}
+              ${escapeHtml(
+                card.desc
+              )}
             </strong>
 
             <small>
-              ${c.parcelas || 1} parcela(s)
+              ${
+                card.parcelas || 1
+              }
+              parcela(s)
             </small>
 
           </div>
 
           <strong>
-            ${money(c.value)}
+            ${money(
+              card.value
+            )}
           </strong>
 
         </div>
 
-      `).join("")
-      : `<span class="note">
-          Nenhuma compra cadastrada.
-         </span>`;
+      `
+    ).join("");
 
 }
 
+
+/* =====================================================
+   RECORRENTES
+===================================================== */
 
 function renderRecurring(){
 
@@ -1940,84 +3057,100 @@ function renderRecurring(){
       "recurringList"
     );
 
+
+  if(!db.recurring.length){
+
+    list.innerHTML = `
+      <span class="note">
+        Nenhuma recorrência cadastrada.
+      </span>
+    `;
+
+    return;
+
+  }
+
+
   list.innerHTML =
-    db.recurring.length
-      ? db.recurring.map(r=>`
+    db.recurring.map(
+      item => `
 
         <div class="row">
 
           <div>
+
             <strong>
-              ${escapeHtml(r.desc)}
+              ${escapeHtml(
+                item.desc
+              )}
             </strong>
 
             <small>
-              ${escapeHtml(r.category)}
+              ${escapeHtml(
+                item.category
+              )}
             </small>
+
           </div>
 
           <strong>
-            ${money(r.value)}
+            ${money(
+              item.value
+            )}
           </strong>
 
         </div>
 
-      `).join("")
-      : `<span class="note">
-          Nenhuma recorrência cadastrada.
-         </span>`;
+      `
+    ).join("");
 
 }
 
 
-/* =========================================================
+/* =====================================================
    MÊS
-========================================================= */
+===================================================== */
 
 function changeMonth(direction){
 
-  currentMonthIndex += direction;
+  currentMonthIndex +=
+    direction;
 
-  if(currentMonthIndex > 11){
+
+  if(
+    currentMonthIndex > 11
+  ){
 
     currentMonthIndex = 0;
+
     currentYear++;
 
   }
 
-  if(currentMonthIndex < 0){
+
+  if(
+    currentMonthIndex < 0
+  ){
 
     currentMonthIndex = 11;
+
     currentYear--;
 
   }
+
 
   save();
 
 }
 
 
-/* =========================================================
-   SEGURANÇA DE TEXTO
-========================================================= */
-
-function escapeHtml(value){
-
-  return String(value)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-
-}
-
-
-/* =========================================================
-   INICIAR
-========================================================= */
+/* =====================================================
+   INICIALIZAÇÃO
+===================================================== */
 
 render();
+
+setupNavigation();
 
 </script>
 
