@@ -1,3158 +1,1746 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-
-<meta name="theme-color" content="#111111">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
+<meta name="theme-color" content="#7a1838">
+<link rel="manifest" href="manifest.json">
 <title>PersonalFin</title>
-
 <style>
-
-:root{
-  --bg:#f5f5f5;
-  --card:#ffffff;
-  --text:#171717;
-  --muted:#777;
-  --line:#e5e5e5;
-  --wine:#7b2435;
-  --wine-light:#f7e9ed;
-  --green:#237a45;
-  --red:#b42318;
-  --shadow:0 2px 12px rgba(0,0,0,.06);
-  --radius:14px;
-}
-
-*{
-  box-sizing:border-box;
-}
-
-html{
-  scroll-behavior:smooth;
-}
-
-body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-}
-
-header{
-  background:#111;
-  color:#fff;
-  padding:20px 18px 18px;
-  position:sticky;
-  top:0;
-  z-index:100;
-}
-
-header h1{
-  margin:0;
-  font-size:25px;
-}
-
-header p{
-  margin:5px 0 0;
-  color:#bbb;
-  font-size:13px;
-}
-
-/* =========================
-   ABAS
-========================= */
-
-.nav{
-  position:sticky;
-  top:76px;
-  z-index:90;
-  background:#fff;
-  border-bottom:1px solid var(--line);
-  box-shadow:0 2px 8px rgba(0,0,0,.05);
-
-  display:flex;
-  overflow-x:auto;
-  white-space:nowrap;
-
-  -webkit-overflow-scrolling:touch;
-}
-
-.nav::-webkit-scrollbar{
-  display:none;
-}
-
-.nav button{
-  flex:0 0 auto;
-  background:transparent;
-  color:#666;
-  border:0;
-  border-radius:0;
-  padding:14px 18px;
-  font-weight:600;
-  font-size:14px;
-  border-bottom:3px solid transparent;
-}
-
-.nav button:hover{
-  background:#fafafa;
-}
-
-.nav button.active{
-  color:var(--wine);
-  border-bottom-color:var(--wine);
-  background:#fff;
-}
-
-/* =========================
-   GERAL
-========================= */
-
-main{
-  max-width:1200px;
-  margin:auto;
-  padding:18px;
-}
-
-section{
-  margin-bottom:30px;
-  scroll-margin-top:145px;
-}
-
-.title{
-  font-size:20px;
-  margin:0 0 12px;
-}
-
-.card{
-  background:#fff;
-  border-radius:14px;
-  box-shadow:var(--shadow);
-  padding:15px;
-  margin-bottom:12px;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:12px;
-}
-
-@media(max-width:800px){
-  .grid{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-  }
-}
-
-@media(max-width:520px){
-  .grid{
-    grid-template-columns:1fr;
-  }
-}
-
-.metric{
-  background:#fff;
-  border-radius:14px;
-  padding:15px;
-  box-shadow:var(--shadow);
-}
-
-.metric .label{
-  color:var(--muted);
-  font-size:12px;
-  margin-bottom:7px;
-}
-
-.metric .big{
-  font-size:23px;
-  font-weight:700;
-}
-
-.green{
-  color:var(--green);
-}
-
-.red{
-  color:var(--red);
-}
-
-.metaBox{
-  background:#fff;
-  border-radius:14px;
-  padding:15px;
-  box-shadow:var(--shadow);
-}
-
-.metaTop{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:9px;
-}
-
-.progress{
-  height:9px;
-  background:#eee;
-  border-radius:20px;
-  overflow:hidden;
-}
-
-.progress span{
-  display:block;
-  height:100%;
-  background:var(--wine);
-}
-
-.note{
-  color:var(--muted);
-  font-size:13px;
-}
-
-/* =========================
-   FORMULÁRIOS
-========================= */
-
-.form{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:10px;
-}
-
-@media(max-width:800px){
-  .form{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-  }
-}
-
-@media(max-width:520px){
-  .form{
-    grid-template-columns:1fr;
-  }
-}
-
-label{
-  display:block;
-  font-size:12px;
-  color:var(--muted);
-  margin-bottom:5px;
-}
-
-input,
-select,
-button{
-  font:inherit;
-}
-
-input,
-select{
-  width:100%;
-  border:1px solid var(--line);
-  border-radius:9px;
-  padding:9px 10px;
-  background:#fff;
-}
-
-button{
-  border:0;
-  border-radius:9px;
-  padding:10px 13px;
-  background:var(--wine);
-  color:#fff;
-  font-weight:600;
-  cursor:pointer;
-}
-
-button.secondary{
-  background:#eee;
-  color:#222;
-}
-
-button.danger{
-  background:#f8e6e6;
-  color:var(--red);
-  padding:5px 9px;
-}
-
-.full{
-  grid-column:1/-1;
-}
-
-/* =========================
-   MÊS
-========================= */
-
-.monthbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-}
-
-.monthbar strong{
-  font-size:17px;
-}
-
-/* =========================
-   TABELAS
-========================= */
-
-.tablewrap{
-  overflow-x:auto;
-  -webkit-overflow-scrolling:touch;
-  border:1px solid var(--line);
-  border-radius:12px;
-}
-
-table{
-  width:100%;
-  min-width:980px;
-  border-collapse:collapse;
-  background:#fff;
-}
-
-th,
-td{
-  border-bottom:1px solid var(--line);
-  padding:8px;
-  text-align:center;
-  white-space:nowrap;
-}
-
-th{
-  background:#fafafa;
-  font-size:12px;
-  color:#666;
-  position:sticky;
-  top:0;
-  z-index:3;
-}
-
-td:first-child,
-th:first-child{
-  text-align:left;
-  position:sticky;
-  left:0;
-  background:#fff;
-  z-index:2;
-}
-
-th:first-child{
-  background:#fafafa;
-  z-index:4;
-}
-
-td input{
-  width:92px;
-  text-align:right;
-  padding:7px;
-}
-
-.totalRow td{
-  font-weight:700;
-  background:#fafafa;
-}
-
-.addStudentRow td{
-  background:#fffafc !important;
-  padding:12px;
-  text-align:left !important;
-}
-
-.addStudentRow button{
-  background:transparent;
-  color:var(--wine);
-  border:1px dashed #c995a0;
-  width:100%;
-  text-align:left;
-}
-
-/* =========================
-   LISTAS
-========================= */
-
-.rows{
-  display:flex;
-  flex-direction:column;
-}
-
-.row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  padding:10px 0;
-  border-bottom:1px solid var(--line);
-}
-
-.row:last-child{
-  border-bottom:0;
-}
-
-.row small{
-  display:block;
-  color:var(--muted);
-  margin-top:3px;
-}
-
-/* =========================
-   RODAPÉ
-========================= */
-
-.footer{
-  text-align:center;
-  color:#999;
-  font-size:12px;
-  padding:20px 0 40px;
-}
-
+:root{--wine:#7a1838;--wine2:#9d2851;--bg:#f7f4f5;--card:#fff;--txt:#272126;--muted:#777078;--line:#eadfe4;--green:#287a58;--red:#b52a2a;--gold:#a86d14}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+header{background:linear-gradient(135deg,var(--wine),var(--wine2));color:#fff;padding:18px 16px 15px;position:sticky;top:0;z-index:20;box-shadow:0 3px 15px #0002}
+header h1{margin:0;font-size:23px}
+header p{margin:3px 0 0;font-size:12px;opacity:.86}
+.wrap{max-width:1100px;margin:auto;padding:14px 12px 90px}
+.tabs{display:flex;gap:7px;overflow:auto;padding:2px 0 12px;position:sticky;top:68px;background:var(--bg);z-index:10}
+.tabs button{white-space:nowrap}
+.tab{border:0;border-radius:11px;padding:9px 12px;background:#eee5e8;color:var(--wine);font-weight:700}
+.tab.active{background:var(--wine);color:#fff}
+.monthbar{display:flex;align-items:center;justify-content:space-between;margin:0 0 12px}
+.monthbar button{width:42px}.monthbar strong{text-transform:capitalize}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:14px;box-shadow:0 2px 10px #00000008}
+.label{font-size:11px;color:var(--muted)}.big{font-size:21px;font-weight:800;margin-top:4px}
+.green{color:var(--green)}.red{color:var(--red)}.gold{color:var(--gold)}
+section{margin-top:13px}.title{font-size:16px;font-weight:800;margin:0 0 8px}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
+.table{border-collapse:collapse;width:100%;min-width:760px;font-size:13px}
+.table th,.table td{padding:8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+.table th:first-child,.table td:first-child{text-align:left;position:sticky;left:0;background:#fff}
+.table th{background:#f4ecef;color:var(--wine)}
+.table input{width:90px;padding:7px;border:1px solid var(--line);border-radius:8px;text-align:right}
+.form{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.form .full{grid-column:1/-1}
+label{font-size:11px;color:var(--muted);display:block;margin-bottom:4px}
+input,select{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff;font:inherit}
+button{border:0;border-radius:11px;padding:10px 13px;background:var(--wine);color:#fff;font-weight:750;cursor:pointer}
+.secondary{background:#eee5e8;color:var(--wine)}.danger{background:#fbe7e7;color:var(--red)}
+.actions{display:flex;gap:7px;flex-wrap:wrap}.note{font-size:12px;color:var(--muted);line-height:1.45}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.bar{height:9px;background:#eee7ea;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--wine);border-radius:99px}
+.rows .row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.rows .row:last-child{border:0}.rows small{display:block;color:var(--muted);margin-top:2px}
+.pill{display:inline-block;padding:3px 7px;border-radius:99px;background:#f0e5e9;color:var(--wine);font-size:10px;font-weight:700}
+.dangerText{color:var(--red)}.successText{color:var(--green)}
+.addStudent td{background:#fffafb!important}.addStudent button{width:100%;text-align:left;background:#fff;color:var(--wine);border:1px dashed #c99aa8;font-weight:800}
+.totalRow td{font-weight:800;background:#faf6f7;color:var(--wine)}
+.sync{font-size:11px;margin-left:7px}.sync button{font-size:10px;padding:5px 8px;margin-left:5px}
+#authBox{position:fixed;inset:0;background:#0008;z-index:999;display:flex;align-items:center;justify-content:center;padding:18px}
+#authBox[hidden]{display:none}
+.authCard{width:min(420px,100%);background:#fff;border-radius:18px;padding:22px;box-shadow:0 15px 50px #0005}
+.authCard h2{margin:0 0 7px}.authCard p{font-size:13px;color:var(--muted);line-height:1.45}
+.authCard input{margin-bottom:10px}.authBtns{display:flex;gap:8px;flex-wrap:wrap}.authMsg{font-size:12px;color:var(--wine);margin-top:10px}
+@media(max-width:760px){.grid,.kpis{grid-template-columns:repeat(2,1fr)}.form{grid-template-columns:1fr 1fr}.tabs{top:62px}.big{font-size:19px}}
+@media(max-width:480px){.form{grid-template-columns:1fr}.form .full{grid-column:auto}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-
 <body>
 
-<!-- =====================================================
-     CABEÇALHO
-===================================================== -->
-
 <header>
-
-  <h1>PersonalFin</h1>
-
-  <p>
-    Controle financeiro pessoal • dados salvos neste aparelho
-  </p>
-
+<h1>PersonalFin</h1>
+<p>Controle financeiro pessoal <span class="sync" id="syncStatus">• sincronização desativada</span></p>
 </header>
 
-
-<!-- =====================================================
-     ABAS
-===================================================== -->
-
-<nav class="nav" id="mainNav">
-
-  <button
-    data-target="painel"
-    onclick="goToSection('painel')"
-  >
-    Painel
-  </button>
-
-  <button
-    data-target="entradas"
-    onclick="goToSection('entradas')"
-  >
-    Entradas
-  </button>
-
-  <button
-    data-target="saidas"
-    onclick="goToSection('saidas')"
-  >
-    Saídas
-  </button>
-
-  <button
-    data-target="cartaoCasa"
-    onclick="goToSection('cartaoCasa')"
-  >
-    Cartão Casa
-  </button>
-
-  <button
-    data-target="cartaoPessoal"
-    onclick="goToSection('cartaoPessoal')"
-  >
-    Cartão Pessoal
-  </button>
-
-  <button
-    data-target="recorrentes"
-    onclick="goToSection('recorrentes')"
-  >
-    Recorrentes
-  </button>
-
-  <button
-    data-target="reserva"
-    onclick="goToSection('reserva')"
-  >
-    Reserva
-  </button>
-
-</nav>
-
-
-<main>
-
-
-<!-- =====================================================
-     PAINEL
-===================================================== -->
-
-<section id="painel">
-
-  <h2 class="title">
-    Painel Financeiro
-  </h2>
-
-
-  <div
-    class="grid"
-    id="metrics"
-  ></div>
-
-
-  <div
-    class="grid"
-    style="margin-top:12px"
-  >
-
-    <div class="metaBox">
-
-      <div class="metaTop">
-
-        <strong>
-          Personal
-        </strong>
-
-        <span id="personalMeta"></span>
-
-      </div>
-
-      <div class="progress">
-
-        <span
-          id="personalProgress"
-        ></span>
-
-      </div>
-
-      <div
-        class="note"
-        style="margin-top:7px"
-      >
-        Meta atual: 14 alunas — sem limite de cadastro.
-      </div>
-
-    </div>
-
-
-    <div class="metaBox">
-
-      <div class="metaTop">
-
-        <strong>
-          Consultoria online
-        </strong>
-
-        <span id="consultoriaMeta"></span>
-
-      </div>
-
-      <div class="progress">
-
-        <span
-          id="consultoriaProgress"
-        ></span>
-
-      </div>
-
-      <div
-        class="note"
-        style="margin-top:7px"
-      >
-        Meta atual: 20 alunos — sem limite de cadastro.
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =====================================================
-     ENTRADAS
-===================================================== -->
-
-<section id="entradas">
-
-  <h2 class="title">
-    Entradas
-  </h2>
-
-
-  <div class="card">
-
-    <div class="monthbar">
-
-      <button
-        class="secondary"
-        onclick="changeMonth(-1)"
-      >
-        ‹
-      </button>
-
-      <strong id="monthTitle"></strong>
-
-      <button
-        class="secondary"
-        onclick="changeMonth(1)"
-      >
-        ›
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <!-- PERSONAL + CONSULTORIA -->
-
-  <div id="studentSections"></div>
-
-
-  <!-- APLICATIVO -->
-
-  <div class="card">
-
-    <h3 style="margin-top:0">
-      Aplicativo
-    </h3>
-
-    <label>
-      Valor recebido no mês
-    </label>
-
-    <input
-      id="appValue"
-      type="number"
-      step="0.01"
-      min="0"
-      oninput="setApp(this.value)"
-    >
-
-  </div>
-
-
-  <!-- ENTRADAS EXTRAS -->
-
-  <h3>
-    Entradas Extras
-  </h3>
-
-  <div class="card">
-
-    <form
-      onsubmit="addExtra(event)"
-      class="form"
-    >
-
-      <div>
-
-        <label>
-          Data
-        </label>
-
-        <input
-          id="xd"
-          type="date"
-          required
-        >
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Descrição
-        </label>
-
-        <input
-          id="xdesc"
-          required
-        >
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Valor
-        </label>
-
-        <input
-          id="xval"
-          type="number"
-          step="0.01"
-          min="0"
-          required
-        >
-
-      </div>
-
-
-      <div style="align-self:end">
-
-        <button>
-          Adicionar entrada
-        </button>
-
-      </div>
-
-    </form>
-
-  </div>
-
-
-  <div
-    class="card rows"
-    id="extraList"
-  ></div>
-
-</section>
-
-
-<!-- =====================================================
-     SAÍDAS
-===================================================== -->
-
-<section id="saidas">
-
-  <h2 class="title">
-    Saídas
-  </h2>
-
-
-  <div class="card">
-
-    <form
-      onsubmit="addExpense(event)"
-      class="form"
-    >
-
-      <div>
-
-        <label>
-          Data
-        </label>
-
-        <input
-          id="ed"
-          type="date"
-          required
-        >
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Descrição
-        </label>
-
-        <input
-          id="edesc"
-          required
-        >
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Valor
-        </label>
-
-        <input
-          id="eval"
-          type="number"
-          step="0.01"
-          min="0"
-          required
-        >
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Categoria
-        </label>
-
-        <select id="ecat">
-
-          <option>
-            Gastos fixos
-          </option>
-
-          <option>
-            Investimentos
-          </option>
-
-          <option>
-            Reserva de emergência
-          </option>
-
-          <option>
-            Outros
-          </option>
-
-        </select>
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Forma
-        </label>
-
-        <select id="eform">
-
-          <option>
-            Pix
-          </option>
-
-          <option>
-            Dinheiro
-          </option>
-
-        </select>
-
-      </div>
-
-
-      <div style="align-self:end">
-
-        <button>
-          Adicionar saída
-        </button>
-
-      </div>
-
-    </form>
-
-  </div>
-
-
-  <div
-    class="card rows"
-    id="expenseList"
-  ></div>
-
-</section>
-
-
-<!-- =====================================================
-     CARTÃO CASA
-===================================================== -->
-
-<section id="cartaoCasa">
-
-  <h2 class="title">
-    Cartão Casa
-  </h2>
-
-
-  <div class="card">
-
-    <form
-      onsubmit="addCard(event,'casa')"
-      class="form"
-    >
-
-      <div>
-
-        <label>
-          Descrição
-        </label>
-
-        <input
-          id="ccdesc"
-          required
-        >
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Valor da parcela
-        </label>
-
-        <input
-          id="ccval"
-          type="number"
-          step="0.01"
-          min="0"
-          required
-        >
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Primeiro mês
-        </label>
-
-        <input
-          id="ccmonth"
-          type="month"
-          required
-        >
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Nº de parcelas
-        </label>
-
-        <input
-          id="ccparcelas"
-          type="number"
-          min="1"
-          value="1"
-          required
-        >
-
-      </div>
-
-
-      <div style="align-self:end">
-
-        <button>
-          Adicionar compra
-        </button>
-
-      </div>
-
-    </form>
-
-  </div>
-
-
-  <div
-    class="card rows"
-    id="cardCasaList"
-  ></div>
-
-</section>
-
-
-<!-- =====================================================
-     CARTÃO PESSOAL
-===================================================== -->
-
-<section id="cartaoPessoal">
-
-  <h2 class="title">
-    Cartão Pessoal
-  </h2>
-
-
-  <div class="card">
-
-    <form
-      onsubmit="addCard(event,'pessoal')"
-      class="form"
-    >
-
-      <div>
-
-        <label>
-          Descrição
-        </label>
-
-        <input
-          id="cpdesc"
-          required
-        >
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Valor da parcela
-        </label>
-
-        <input
-          id="cpval"
-          type="number"
-          step="0.01"
-          min="0"
-          required
-        >
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Primeiro mês
-        </label>
-
-        <input
-          id="cpmonth"
-          type="month"
-          required
-        >
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Nº de parcelas
-        </label>
-
-        <input
-          id="cpparcelas"
-          type="number"
-          min="1"
-          value="1"
-          required
-        >
-
-      </div>
-
-
-      <div style="align-self:end">
-
-        <button>
-          Adicionar compra
-        </button>
-
-      </div>
-
-    </form>
-
-  </div>
-
-
-  <div
-    class="card rows"
-    id="cardPessoalList"
-  ></div>
-
-</section>
-
-
-<!-- =====================================================
-     RECORRENTES
-===================================================== -->
-
-<section id="recorrentes">
-
-  <h2 class="title">
-    Recorrentes
-  </h2>
-
-
-  <div class="card">
-
-    <form
-      onsubmit="addRecurring(event)"
-      class="form"
-    >
-
-      <div>
-
-        <label>
-          Descrição
-        </label>
-
-        <input
-          id="rdesc"
-          required
-        >
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Valor mensal
-        </label>
-
-        <input
-          id="rval"
-          type="number"
-          step="0.01"
-          min="0"
-          required
-        >
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Categoria
-        </label>
-
-        <select id="rcat">
-
-          <option>
-            Gastos fixos
-          </option>
-
-          <option>
-            Cartão Casa
-          </option>
-
-          <option>
-            Cartão Pessoal
-          </option>
-
-        </select>
-
-      </div>
-
-
-      <div style="align-self:end">
-
-        <button>
-          Adicionar recorrente
-        </button>
-
-      </div>
-
-    </form>
-
-  </div>
-
-
-  <div
-    class="card rows"
-    id="recurringList"
-  ></div>
-
-</section>
-
-
-<!-- =====================================================
-     RESERVA
-===================================================== -->
-
-<section id="reserva">
-
-  <h2 class="title">
-    Reserva de emergência
-  </h2>
-
-
-  <div class="card">
-
-    <form
-      onsubmit="addReserve(event)"
-      class="form"
-    >
-
-      <div>
-
-        <label>
-          Valor reservado neste mês
-        </label>
-
-        <input
-          id="rr"
-          type="number"
-          step="0.01"
-          min="0"
-          required
-        >
-
-      </div>
-
-
-      <div style="align-self:end">
-
-        <button>
-          Registrar reserva
-        </button>
-
-      </div>
-
-    </form>
-
-  </div>
-
-
-  <div class="card">
-
-    <strong>
-      Total acumulado:
-    </strong>
-
-    <span id="reserveTotal"></span>
-
-  </div>
-
-</section>
-
-
-<div class="footer">
-  PersonalFin • dados salvos neste aparelho
+<div id="authBox" hidden>
+<div class="authCard">
+<h2>Sincronizar PersonalFin</h2>
+<p>Crie seu acesso para usar os mesmos dados no computador e no celular.</p>
+
+<label>E-mail</label>
+<input id="authEmail" type="email" autocomplete="email" placeholder="seu@email.com">
+
+<label>Senha</label>
+<input id="authPassword" type="password" autocomplete="current-password" placeholder="mínimo de 6 caracteres">
+
+<div class="authBtns">
+<button type="button" onclick="login()">Entrar</button>
+<button type="button" class="secondary" onclick="signup()">Criar acesso</button>
+<button type="button" class="secondary" onclick="closeAuth()">Agora não</button>
 </div>
 
-</main>
+<div id="authMsg" class="authMsg"></div>
+</div>
+</div>
 
+<div class="wrap">
+<nav class="tabs" id="tabs"></nav>
+<div id="app"></div>
+</div>
 
 <script>
+const SUPABASE_URL='https://igsljwivdwfrwxhewewi.supabase.co';
+const SUPABASE_KEY='sb_publishable_ZLvwvOSfy7Y3H_Vd_jhYXg_I9SzyJrw';
 
-/* =====================================================
-   CONFIGURAÇÃO
-===================================================== */
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-const STORAGE_KEY =
-  "personalfin_complete_v1";
+const months=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
-const months = [
-  "Jan",
-  "Fev",
-  "Mar",
-  "Abr",
-  "Mai",
-  "Jun",
-  "Jul",
-  "Ago",
-  "Set",
-  "Out",
-  "Nov",
-  "Dez"
+const fullMonths=[
+'Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'
 ];
 
-const now =
-  new Date();
+const money=v=>new Intl.NumberFormat('pt-BR',{
+style:'currency',
+currency:'BRL'
+}).format(Number(v)||0);
 
-let db =
-  loadDatabase();
+const n=v=>Number(v)||0;
+const id=()=>Date.now()+Math.random();
 
-let currentMonthIndex =
-  Number.isInteger(db.monthIndex)
-    ? db.monthIndex
-    : now.getMonth();
+const esc=s=>String(s??'')
+.replaceAll('&','&amp;')
+.replaceAll('<','&lt;')
+.replaceAll('>','&gt;')
+.replaceAll('"','&quot;')
+.replaceAll("'","&#039;");
 
-let currentYear =
-  Number.isInteger(db.year)
-    ? db.year
-    : now.getFullYear();
+function student(name){
+return{
+id:id(),
+name,
+values:Array(12).fill(0)
+};
+}
 
+const defaultPersonal=[
+'Juliana',
+'João',
+'Rafa',
+'Pri e Isa',
+'Neuza',
+'Dani',
+'Giovanna',
+'Ana Velasco',
+'Luís Lunguinho'
+];
 
-/* =====================================================
-   UTILIDADES
-===================================================== */
+const defaultConsultoria=[
+'Bruno Fitaroni',
+'Isadora Rodrigues',
+'Raissa Nogueira',
+'Marcos Marin'
+];
 
-function n(value){
+const initial={
+year:new Date().getFullYear(),
+month:new Date().getMonth(),
+entries:[],
+cards:{
+casa:[],
+pessoal:[]
+},
 
-  const x =
-    Number(value);
+recurring:[
+['Gastos fixos','Financiamento da casa','Pix',711,'Sim','Compromisso fixo'],
+['Gastos fixos','Financiamento do carro','Pix',816.11,'Sim','Compromisso fixo'],
+['Gastos fixos','Condomínio','Pix',492,'Sim','Compromisso fixo'],
+['Gastos fixos','Energia elétrica','Pix',46.79,'Sim','Compromisso fixo'],
+['Gastos fixos','Internet','Pix',50,'Sim','Compromisso fixo'],
+['Gastos fixos','IPTU','Pix',50.74,'Sim','Compromisso fixo'],
+['Gastos fixos','IPVA — minha metade','Pix',125,'Sim','Compromisso fixo'],
 
-  return Number.isFinite(x)
-    ? x
-    : 0;
+['Cartão Casa','Seguro do carro','Cartão Casa',127.04,'Sim','Recorrente'],
+['Cartão Casa','Gasolina','Cartão Casa',80,'Sim','Valor de referência'],
+['Cartão Casa','iCloud Familiar','Cartão Casa',33,'Sim','Recorrente'],
+['Cartão Casa','Creche','Cartão Casa',0,'Não','Compra grande / parcelada — lançar no cartão quando comprar'],
+['Cartão Casa','Ração da Panqueca','Cartão Casa',0,'Não','Pacote grande / parcelado — lançar no cartão quando comprar'],
+['Cartão Casa','Areia','Cartão Casa',0,'Não','Pacotes grandes / parcelado — lançar no cartão quando comprar'],
+
+['Cartão Pessoal','Seguro Prudential','Cartão Pessoal',236.28,'Sim','Recorrente'],
+['Cartão Pessoal','Taxa Personal','Cartão Pessoal',99.90,'Sim','Recorrente'],
+['Cartão Pessoal','Spotify — Lazer','Cartão Pessoal',40.90,'Sim','Lazer / recorrente'],
+['Cartão Pessoal','Wellhub/Gympass — Lazer','Cartão Pessoal',189.90,'Sim','Lazer / recorrente'],
+['Cartão Pessoal','Claro Flex','Cartão Pessoal',44.90,'Sim','Recorrente'],
+['Cartão Pessoal','MFIT','Cartão Pessoal',34.90,'Sim','Recorrente']
+],
+
+inputs:{
+personal:defaultPersonal,
+consultoria:defaultConsultoria,
+app:0
+},
+
+settings:{
+salary:0,
+reservePct:5,
+investPct:10,
+emergencyMonths:6
+},
+
+reserve:[]
+};
+
+let db=load();
+let tab='painel';
+let currentUser=null;
+
+function load(){
+
+try{
+
+const raw=JSON.parse(
+localStorage.getItem('personalfin_complete_v1')||'null'
+);
+
+if(!raw)return structuredClone(initial);
+
+raw.students=raw.students||{
+personal:[],
+consultoria:[]
+};
+
+if(!raw.students.personal.length&&
+Array.isArray(raw.inputs?.personal)){
+
+raw.students.personal=
+raw.inputs.personal.map((name,i)=>({
+
+id:id(),
+name,
+
+values:Array.from(
+{length:12},
+(_,m)=>n(
+raw.inputValues?.[
+'personal_'+i+'_'+m
+]
+)
+
+)
+
+}));
 
 }
 
+if(!raw.students.consultoria.length&&
+Array.isArray(raw.inputs?.consultoria)){
 
-function money(value){
+raw.students.consultoria=
+raw.inputs.consultoria.map((name,i)=>({
 
-  return n(value)
-    .toLocaleString(
-      "pt-BR",
-      {
-        style:"currency",
-        currency:"BRL"
-      }
-    );
+id:id(),
+name,
 
-}
+values:Array.from(
+{length:12},
+(_,m)=>n(
+raw.inputValues?.[
+'consultoria_'+i+'_'+m
+]
+)
 
+)
 
-function id(){
-
-  return (
-    Date.now().toString(36) +
-    Math.random()
-      .toString(36)
-      .slice(2)
-  );
+}));
 
 }
 
+raw.students.personal=
+(raw.students.personal||[]).map(s=>({
 
-function ym(){
+id:s.id||id(),
+name:s.name||'Sem nome',
 
-  return (
-    currentYear +
-    "-" +
-    String(
-      currentMonthIndex + 1
-    ).padStart(2,"0")
-  );
+values:Array.from(
+{length:12},
+(_,i)=>n(s.values?.[i])
+)
 
-}
+}));
 
+raw.students.consultoria=
+(raw.students.consultoria||[]).map(s=>({
 
-function escapeHtml(value){
+id:s.id||id(),
+name:s.name||'Sem nome',
 
-  return String(value)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+values:Array.from(
+{length:12},
+(_,i)=>n(s.values?.[i])
+)
 
-}
+}));
 
+raw.inputs=raw.inputs||{app:0};
 
-/* =====================================================
-   BANCO PADRÃO
-===================================================== */
+raw.cards=raw.cards||{
+casa:[],
+pessoal:[]
+};
 
-function makeStudent(name){
+raw.cards.casa=raw.cards.casa||[];
+raw.cards.pessoal=raw.cards.pessoal||[];
 
-  return {
+raw.entries=raw.entries||[];
+raw.recurring=raw.recurring||[];
+raw.reserve=raw.reserve||[];
 
-    id:id(),
+return raw;
 
-    name:name,
+}catch(e){
 
-    values:Array(12).fill(0)
-
-  };
-
-}
-
-
-function defaultDatabase(){
-
-  return {
-
-    monthIndex:
-      now.getMonth(),
-
-    year:
-      now.getFullYear(),
-
-    students:{
-
-      personal:[
-        "Juliana",
-        "João",
-        "Rafa",
-        "Pri e Isa",
-        "Neuza",
-        "Dani",
-        "Giovanna",
-        "Ana Velasco",
-        "Luís Lunguinho"
-      ].map(makeStudent),
-
-      consultoria:[]
-
-    },
-
-    app:{},
-
-    entries:[],
-
-    cards:{
-      casa:[],
-      pessoal:[]
-    },
-
-    recurring:[],
-
-    reserve:[]
-
-  };
+return structuredClone(initial);
 
 }
 
+}
 
-/* =====================================================
-   MIGRAÇÃO
-===================================================== */
+function setSync(text){
 
-function migrate(old){
+const el=document.getElementById('syncStatus');
 
-  const base =
-    defaultDatabase();
-
-  if(
-    !old ||
-    typeof old !== "object"
-  ){
-    return base;
-  }
-
-
-  if(old.entries){
-    base.entries =
-      old.entries;
-  }
-
-
-  if(old.cards){
-
-    base.cards = {
-
-      casa:
-        Array.isArray(old.cards.casa)
-          ? old.cards.casa
-          : [],
-
-      pessoal:
-        Array.isArray(old.cards.pessoal)
-          ? old.cards.pessoal
-          : []
-
-    };
-
-  }
-
-
-  if(old.recurring){
-    base.recurring =
-      old.recurring;
-  }
-
-
-  if(old.reserve){
-    base.reserve =
-      old.reserve;
-  }
-
-
-  if(old.app){
-
-    base.app =
-      typeof old.app === "object"
-        ? old.app
-        : {};
-
-  }
-
-
-  if(
-    Number.isInteger(
-      old.monthIndex
-    )
-  ){
-    base.monthIndex =
-      old.monthIndex;
-  }
-
-
-  if(
-    Number.isInteger(
-      old.year
-    )
-  ){
-    base.year =
-      old.year;
-  }
-
-
-  /* NOVO FORMATO */
-
-  if(
-    old.students &&
-    Array.isArray(
-      old.students.personal
-    )
-  ){
-
-    base.students.personal =
-      old.students.personal.map(
-        student => ({
-
-          id:
-            student.id ||
-            id(),
-
-          name:
-            student.name ||
-            "Sem nome",
-
-          values:
-            Array.isArray(
-              student.values
-            )
-              ? Array.from(
-                  {length:12},
-                  (_,i)=>
-                    n(
-                      student.values[i]
-                    )
-                )
-              : Array(12).fill(0)
-
-        })
-      );
-
-  }
-
-
-  if(
-    old.students &&
-    Array.isArray(
-      old.students.consultoria
-    )
-  ){
-
-    base.students.consultoria =
-      old.students.consultoria.map(
-        student => ({
-
-          id:
-            student.id ||
-            id(),
-
-          name:
-            student.name ||
-            "Sem nome",
-
-          values:
-            Array.isArray(
-              student.values
-            )
-              ? Array.from(
-                  {length:12},
-                  (_,i)=>
-                    n(
-                      student.values[i]
-                    )
-                )
-              : Array(12).fill(0)
-
-        })
-      );
-
-  }
-
-
-  /* FORMATO ANTIGO */
-
-  if(old.inputs){
-
-    [
-      "personal",
-      "consultoria"
-    ].forEach(type => {
-
-      const names =
-        Array.isArray(
-          old.inputs[type]
-        )
-          ? old.inputs[type]
-          : [];
-
-
-      if(names.length){
-
-        base.students[type] =
-          names.map(
-            (name,i)=>({
-
-              id:id(),
-
-              name:String(name),
-
-              values:
-                Array.from(
-                  {length:12},
-                  (_,j)=>{
-
-                    if(
-                      old.inputValues
-                    ){
-
-                      return n(
-                        old.inputValues[
-                          type+"_"+i+"_"+j
-                        ]
-                      );
-
-                    }
-
-                    return 0;
-
-                  }
-                )
-
-            })
-          );
-
-      }
-
-    });
-
-  }
-
-
-  return base;
+if(el)el.textContent='• '+text;
 
 }
 
+async function cloudSave(){
 
-function loadDatabase(){
+if(!currentUser)return;
 
-  try{
+try{
 
-    const raw =
-      localStorage.getItem(
-        STORAGE_KEY
-      );
+const {error}=await sb
+.from('personalfin_data')
+.upsert({
 
+user_id:currentUser.id,
+data:db,
+updated_at:new Date().toISOString()
 
-    if(!raw){
+});
 
-      return defaultDatabase();
+if(error)throw error;
 
-    }
+setSync('sincronizado');
 
+}catch(e){
 
-    return migrate(
-      JSON.parse(raw)
-    );
+console.error(e);
 
-  }catch(error){
-
-    console.error(
-      "Erro ao carregar dados:",
-      error
-    );
-
-    return defaultDatabase();
-
-  }
+setSync('erro ao sincronizar');
 
 }
 
-
-/* =====================================================
-   SALVAR
-===================================================== */
+}
 
 function save(){
 
-  const tableStates =
-    [...document.querySelectorAll(".tablewrap")]
-      .map(
-        element => ({
-          scrollLeft:
-            element.scrollLeft
-        })
-      );
-
-
-  db.monthIndex =
-    currentMonthIndex;
-
-  db.year =
-    currentYear;
-
-
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(db)
-  );
-
-
-  render();
-
-
-  requestAnimationFrame(()=>{
-
-    const tables =
-      [...document.querySelectorAll(
-        ".tablewrap"
-      )];
-
-
-    tables.forEach(
-      (element,index)=>{
-
-        if(
-          tableStates[index]
-        ){
-
-          const position =
-            tableStates[index]
-              .scrollLeft;
-
-
-          element.scrollLeft =
-            position;
-
-
-          setTimeout(
-            ()=>{
-              element.scrollLeft =
-                position;
-            },
-            50
-          );
-
-
-          setTimeout(
-            ()=>{
-              element.scrollLeft =
-                position;
-            },
-            150
-          );
-
-        }
-
-      }
-    );
-
-  });
-
-}
-
-
-/* =====================================================
-   NAVEGAÇÃO
-===================================================== */
-
-function goToSection(sectionId){
-
-  const section =
-    document.getElementById(
-      sectionId
-    );
-
-  if(!section){
-    return;
-  }
-
-
-  section.scrollIntoView({
-    behavior:"smooth",
-    block:"start"
-  });
-
-
-  updateActiveTab(
-    sectionId
-  );
-
-}
-
-
-function updateActiveTab(sectionId){
-
-  document
-    .querySelectorAll(
-      "#mainNav button"
-    )
-    .forEach(button=>{
-
-      button.classList.toggle(
-        "active",
-        button.dataset.target === sectionId
-      );
-
-    });
-
-}
-
-
-function setupNavigation(){
-
-  const sections =
-    [
-      "painel",
-      "entradas",
-      "saidas",
-      "cartaoCasa",
-      "cartaoPessoal",
-      "recorrentes",
-      "reserva"
-    ]
-    .map(
-      id=>document.getElementById(id)
-    )
-    .filter(Boolean);
-
-
-  const observer =
-    new IntersectionObserver(
-      entries=>{
-
-        const visible =
-          entries
-            .filter(
-              entry =>
-                entry.isIntersecting
-            )
-            .sort(
-              (a,b)=>
-                b.intersectionRatio -
-                a.intersectionRatio
-            );
-
-
-        if(visible.length){
-
-          updateActiveTab(
-            visible[0]
-              .target.id
-          );
-
-        }
-
-      },
-      {
-        rootMargin:
-          "-150px 0px -55% 0px",
-        threshold:
-          [0.1,0.3,0.6]
-      }
-    );
-
-
-  sections.forEach(
-    section =>
-      observer.observe(section)
-  );
-
-
-  updateActiveTab(
-    "painel"
-  );
-
-}
-
-
-/* =====================================================
-   ALUNOS
-===================================================== */
-
-function studentTable(type){
-
-  const isPersonal =
-    type === "personal";
-
-  const title =
-    isPersonal
-      ? "Personal"
-      : "Consultoria online";
-
-
-  const students =
-    db.students[type] || [];
-
-
-  let html = `
-
-    <div class="card">
-
-      <h3 style="margin-top:0">
-        ${title}
-      </h3>
-
-      <div class="tablewrap">
-
-        <table>
-
-          <thead>
-
-            <tr>
-
-              <th>
-                ${
-                  isPersonal
-                    ? "Aluna"
-                    : "Aluno"
-                }
-              </th>
-
-              ${
-                months.map(
-                  month =>
-                    `<th>${month}</th>`
-                ).join("")
-              }
-
-            </tr>
-
-          </thead>
-
-          <tbody>
-
-  `;
-
-
-  students.forEach(
-    (student,index)=>{
-
-      html += `
-
-        <tr>
-
-          <td>
-            <strong>
-              ${escapeHtml(
-                student.name
-              )}
-            </strong>
-          </td>
-
-          ${
-            months.map(
-              (month,monthIndex)=>`
-
-                <td>
-
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value="${
-                      n(
-                        student.values[
-                          monthIndex
-                        ]
-                      )
-                    }"
-                    onchange="
-                      setStudentValue(
-                        '${type}',
-                        ${index},
-                        ${monthIndex},
-                        this.value
-                      )
-                    "
-                  >
-
-                </td>
-
-              `
-            ).join("")
-          }
-
-        </tr>
-
-      `;
-
-    }
-  );
-
-
-  /* BOTÃO DE ADICIONAR */
-
-  html += `
-
-        <tr class="addStudentRow">
-
-          <td colspan="13">
-
-            <button
-              type="button"
-              onclick="
-                addStudent('${type}')
-              "
-            >
-
-              ＋ Adicionar ${
-                isPersonal
-                  ? "nova aluna"
-                  : "novo aluno"
-              }
-
-            </button>
-
-          </td>
-
-        </tr>
-
-
-        <tr class="totalRow">
-
-          <td>
-            TOTAL ${
-              isPersonal
-                ? "PERSONAL"
-                : "CONSULTORIA"
-            }
-          </td>
-
-          ${
-            months.map(
-              (month,monthIndex)=>{
-
-                const total =
-                  students.reduce(
-                    (sum,student)=>
-                      sum +
-                      n(
-                        student.values[
-                          monthIndex
-                        ]
-                      ),
-                    0
-                  );
-
-                return `
-                  <td>
-                    ${money(total)}
-                  </td>
-                `;
-
-              }
-            ).join("")
-          }
-
-        </tr>
-
-          </tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-  `;
-
-
-  return html;
-
-}
-
-
-function addStudent(type){
-
-  const isPersonal =
-    type === "personal";
-
-
-  const name =
-    prompt(
-      isPersonal
-        ? "Nome da nova aluna:"
-        : "Nome do novo aluno:"
-    );
-
-
-  if(
-    !name ||
-    !name.trim()
-  ){
-    return;
-  }
-
-
-  db.students[type].push(
-    makeStudent(
-      name.trim()
-    )
-  );
-
-
-  save();
-
-}
-
-
-function setStudentValue(
-  type,
-  studentIndex,
-  monthIndex,
-  value
-){
-
-  if(
-    !db.students[type] ||
-    !db.students[type][studentIndex]
-  ){
-    return;
-  }
-
-
-  db.students[type]
-    [studentIndex]
-    .values[monthIndex] =
-      n(value);
-
-
-  save();
-
-}
-
-
-/* =====================================================
-   APLICATIVO
-===================================================== */
-
-function setApp(value){
-
-  db.app[ym()] =
-    n(value);
-
-  save();
-
-}
-
-
-/* =====================================================
-   ENTRADAS EXTRAS
-===================================================== */
-
-function addExtra(event){
-
-  event.preventDefault();
-
-
-  const date =
-    document.getElementById(
-      "xd"
-    ).value;
-
-
-  const desc =
-    document.getElementById(
-      "xdesc"
-    ).value.trim();
-
-
-  const value =
-    n(
-      document.getElementById(
-        "xval"
-      ).value
-    );
-
-
-  if(
-    !date ||
-    !desc ||
-    !value
-  ){
-    return;
-  }
-
-
-  db.entries.push({
-
-    id:id(),
-
-    ym:date.slice(0,7),
-
-    type:"entrada",
-
-    amount:value,
-
-    category:"Entrada Extra",
-
-    form:"Entrada",
-
-    desc:desc,
-
-    date:date
-
-  });
-
-
-  event.target.reset();
-
-  save();
-
-}
-
-
-/* =====================================================
-   SAÍDAS
-===================================================== */
-
-function addExpense(event){
-
-  event.preventDefault();
-
-
-  const date =
-    document.getElementById(
-      "ed"
-    ).value;
-
-
-  const desc =
-    document.getElementById(
-      "edesc"
-    ).value.trim();
-
-
-  const value =
-    n(
-      document.getElementById(
-        "eval"
-      ).value
-    );
-
-
-  const category =
-    document.getElementById(
-      "ecat"
-    ).value;
-
-
-  const form =
-    document.getElementById(
-      "eform"
-    ).value;
-
-
-  if(
-    !date ||
-    !desc ||
-    !value
-  ){
-    return;
-  }
-
-
-  db.entries.push({
-
-    id:id(),
-
-    ym:date.slice(0,7),
-
-    type:"saida",
-
-    amount:value,
-
-    category:category,
-
-    form:form,
-
-    desc:desc,
-
-    date:date
-
-  });
-
-
-  event.target.reset();
-
-  save();
-
-}
-
-
-/* =====================================================
-   CARTÕES
-===================================================== */
-
-function addCard(event,which){
-
-  event.preventDefault();
-
-
-  const prefix =
-    which === "casa"
-      ? "cc"
-      : "cp";
-
-
-  const desc =
-    document.getElementById(
-      prefix+"desc"
-    ).value.trim();
-
-
-  const value =
-    n(
-      document.getElementById(
-        prefix+"val"
-      ).value
-    );
-
-
-  const month =
-    document.getElementById(
-      prefix+"month"
-    ).value;
-
-
-  const parcelas =
-    Math.max(
-      1,
-      parseInt(
-        document.getElementById(
-          prefix+"parcelas"
-        ).value
-      ) || 1
-    );
-
-
-  if(
-    !desc ||
-    !value ||
-    !month
-  ){
-    return;
-  }
-
-
-  const monthsList = [];
-
-
-  const firstYear =
-    Number(
-      month.slice(0,4)
-    );
-
-
-  const firstMonth =
-    Number(
-      month.slice(5,7)
-    ) - 1;
-
-
-  for(
-    let i=0;
-    i<parcelas;
-    i++
-  ){
-
-    const date =
-      new Date(
-        firstYear,
-        firstMonth+i,
-        1
-      );
-
-
-    monthsList.push(
-      date.getFullYear() +
-      "-" +
-      String(
-        date.getMonth()+1
-      ).padStart(2,"0")
-    );
-
-  }
-
-
-  db.cards[which].push({
-
-    id:id(),
-
-    desc:desc,
-
-    value:value,
-
-    month:month,
-
-    months:monthsList,
-
-    parcelas:parcelas
-
-  });
-
-
-  event.target.reset();
-
-  save();
-
-}
-
-
-/* =====================================================
-   RECORRENTES
-===================================================== */
-
-function addRecurring(event){
-
-  event.preventDefault();
-
-
-  const desc =
-    document.getElementById(
-      "rdesc"
-    ).value.trim();
-
-
-  const value =
-    n(
-      document.getElementById(
-        "rval"
-      ).value
-    );
-
-
-  const category =
-    document.getElementById(
-      "rcat"
-    ).value;
-
-
-  if(
-    !desc ||
-    !value
-  ){
-    return;
-  }
-
-
-  db.recurring.push({
-
-    id:id(),
-
-    desc:desc,
-
-    value:value,
-
-    category:category
-
-  });
-
-
-  event.target.reset();
-
-  save();
-
-}
-
-
-/* =====================================================
-   RESERVA
-===================================================== */
-
-function addReserve(event){
-
-  event.preventDefault();
-
-
-  const value =
-    n(
-      document.getElementById(
-        "rr"
-      ).value
-    );
-
-
-  if(!value){
-    return;
-  }
-
-
-  db.reserve.push({
-
-    id:id(),
-
-    ym:ym(),
-
-    value:value
-
-  });
-
-
-  event.target.reset();
-
-  save();
-
-}
-
-
-/* =====================================================
-   CÁLCULOS
-===================================================== */
-
-function personalMonth(){
-
-  return (
-    db.students.personal || []
-  ).reduce(
-    (sum,student)=>
-      sum +
-      n(
-        student.values[
-          currentMonthIndex
-        ]
-      ),
-    0
-  );
-
-}
-
-
-function consultoriaMonth(){
-
-  return (
-    db.students.consultoria || []
-  ).reduce(
-    (sum,student)=>
-      sum +
-      n(
-        student.values[
-          currentMonthIndex
-        ]
-      ),
-    0
-  );
-
-}
-
-
-function extraIncome(){
-
-  return db.entries
-
-    .filter(
-      entry =>
-        entry.ym === ym() &&
-        entry.type === "entrada"
-    )
-
-    .reduce(
-      (sum,entry)=>
-        sum+n(entry.amount),
-      0
-    );
-
-}
-
-
-function appMonth(){
-
-  return n(
-    db.app[ym()]
-  );
-
-}
-
-
-function income(){
-
-  return (
-    personalMonth() +
-    consultoriaMonth() +
-    appMonth() +
-    extraIncome()
-  );
-
-}
-
-
-function expenses(){
-
-  let total = 0;
-
-
-  total +=
-    db.entries
-
-      .filter(
-        entry =>
-          entry.ym === ym() &&
-          entry.type === "saida"
-      )
-
-      .reduce(
-        (sum,entry)=>
-          sum+n(entry.amount),
-        0
-      );
-
-
-  total +=
-    db.cards.casa
-
-      .filter(
-        card =>
-          card.months &&
-          card.months.includes(
-            ym()
-          )
-      )
-
-      .reduce(
-        (sum,card)=>
-          sum+n(card.value),
-        0
-      );
-
-
-  total +=
-    db.cards.pessoal
-
-      .filter(
-        card =>
-          card.months &&
-          card.months.includes(
-            ym()
-          )
-      )
-
-      .reduce(
-        (sum,card)=>
-          sum+n(card.value),
-        0
-      );
-
-
-  total +=
-    db.recurring
-
-      .reduce(
-        (sum,item)=>
-          sum+n(item.value),
-        0
-      );
-
-
-  return total;
-
-}
-
-
-function reserveTotal(){
-
-  return db.reserve.reduce(
-    (sum,item)=>
-      sum+n(item.value),
-    0
-  );
-
-}
-
-
-/* =====================================================
-   RENDER
-===================================================== */
-
-function render(){
-
-  /* MÊS */
-
-  document.getElementById(
-    "monthTitle"
-  ).textContent =
-    months[
-      currentMonthIndex
-    ] +
-    " " +
-    currentYear;
-
-
-  /* TABELAS */
-
-  document.getElementById(
-    "studentSections"
-  ).innerHTML =
-
-    studentTable(
-      "personal"
-    ) +
-
-    studentTable(
-      "consultoria"
-    );
-
-
-  /* APLICATIVO */
-
-  const app =
-    document.getElementById(
-      "appValue"
-    );
-
-
-  if(app){
-
-    app.value =
-      db.app[ym()] || "";
-
-  }
-
-
-  /* FINANCEIRO */
-
-  const inc =
-    income();
-
-
-  const out =
-    expenses();
-
-
-  const available =
-    Math.max(
-      0,
-      inc-out
-    );
-
-
-  document.getElementById(
-    "metrics"
-  ).innerHTML = `
-
-    <div class="metric">
-
-      <div class="label">
-        Renda
-      </div>
-
-      <div class="big green">
-        ${money(inc)}
-      </div>
-
-    </div>
-
-
-    <div class="metric">
-
-      <div class="label">
-        Saídas
-      </div>
-
-      <div class="big red">
-        ${money(out)}
-      </div>
-
-    </div>
-
-
-    <div class="metric">
-
-      <div class="label">
-        Disponível
-      </div>
-
-      <div class="big">
-        ${money(available)}
-      </div>
-
-    </div>
-
-
-    <div class="metric">
-
-      <div class="label">
-        Reserva acumulada
-      </div>
-
-      <div class="big">
-        ${money(
-          reserveTotal()
-        )}
-      </div>
-
-    </div>
-
-  `;
-
-
-  /* METAS */
-
-  const personalCount =
-    db.students.personal.length;
-
-
-  const consultoriaCount =
-    db.students.consultoria.length;
-
-
-  document.getElementById(
-    "personalMeta"
-  ).textContent =
-    personalCount +
-    " / 14";
-
-
-  document.getElementById(
-    "consultoriaMeta"
-  ).textContent =
-    consultoriaCount +
-    " / 20";
-
-
-  document.getElementById(
-    "personalProgress"
-  ).style.width =
-    Math.min(
-      100,
-      personalCount / 14 * 100
-    ) +
-    "%";
-
-
-  document.getElementById(
-    "consultoriaProgress"
-  ).style.width =
-    Math.min(
-      100,
-      consultoriaCount / 20 * 100
-    ) +
-    "%";
-
-
-  renderExtras();
-
-  renderExpenses();
-
-  renderCards("casa");
-
-  renderCards("pessoal");
-
-  renderRecurring();
-
-
-  document.getElementById(
-    "reserveTotal"
-  ).textContent =
-    money(
-      reserveTotal()
-    );
-
-}
-
-
-/* =====================================================
-   ENTRADAS EXTRAS
-===================================================== */
-
-function renderExtras(){
-
-  const list =
-    document.getElementById(
-      "extraList"
-    );
-
-
-  const items =
-    db.entries.filter(
-      entry =>
-        entry.type === "entrada" &&
-        entry.ym === ym()
-    );
-
-
-  if(!items.length){
-
-    list.innerHTML = `
-      <span class="note">
-        Nenhuma entrada extra neste mês.
-      </span>
-    `;
-
-    return;
-
-  }
-
-
-  list.innerHTML =
-    items.map(
-      entry => `
-
-        <div class="row">
-
-          <div>
-
-            <strong>
-              ${escapeHtml(
-                entry.desc
-              )}
-            </strong>
-
-            <small>
-              ${entry.date || ""}
-            </small>
-
-          </div>
-
-          <strong class="green">
-            ${money(
-              entry.amount
-            )}
-          </strong>
-
-        </div>
-
-      `
-    ).join("");
-
-}
-
-
-/* =====================================================
-   SAÍDAS
-===================================================== */
-
-function renderExpenses(){
-
-  const list =
-    document.getElementById(
-      "expenseList"
-    );
-
-
-  const items =
-    db.entries.filter(
-      entry =>
-        entry.type === "saida" &&
-        entry.ym === ym()
-    );
-
-
-  if(!items.length){
-
-    list.innerHTML = `
-      <span class="note">
-        Nenhuma saída lançada neste mês.
-      </span>
-    `;
-
-    return;
-
-  }
-
-
-  list.innerHTML =
-    items.map(
-      entry => `
-
-        <div class="row">
-
-          <div>
-
-            <strong>
-              ${escapeHtml(
-                entry.desc
-              )}
-            </strong>
-
-            <small>
-              ${entry.date || ""}
-              •
-              ${escapeHtml(
-                entry.category || ""
-              )}
-            </small>
-
-          </div>
-
-          <strong class="red">
-            ${money(
-              entry.amount
-            )}
-          </strong>
-
-        </div>
-
-      `
-    ).join("");
-
-}
-
-
-/* =====================================================
-   CARTÕES
-===================================================== */
-
-function renderCards(which){
-
-  const elementId =
-    which === "casa"
-      ? "cardCasaList"
-      : "cardPessoalList";
-
-
-  const list =
-    document.getElementById(
-      elementId
-    );
-
-
-  const cards =
-    db.cards[which] || [];
-
-
-  if(!cards.length){
-
-    list.innerHTML = `
-      <span class="note">
-        Nenhuma compra cadastrada.
-      </span>
-    `;
-
-    return;
-
-  }
-
-
-  list.innerHTML =
-    cards.map(
-      card => `
-
-        <div class="row">
-
-          <div>
-
-            <strong>
-              ${escapeHtml(
-                card.desc
-              )}
-            </strong>
-
-            <small>
-              ${
-                card.parcelas || 1
-              }
-              parcela(s)
-            </small>
-
-          </div>
-
-          <strong>
-            ${money(
-              card.value
-            )}
-          </strong>
-
-        </div>
-
-      `
-    ).join("");
-
-}
-
-
-/* =====================================================
-   RECORRENTES
-===================================================== */
-
-function renderRecurring(){
-
-  const list =
-    document.getElementById(
-      "recurringList"
-    );
-
-
-  if(!db.recurring.length){
-
-    list.innerHTML = `
-      <span class="note">
-        Nenhuma recorrência cadastrada.
-      </span>
-    `;
-
-    return;
-
-  }
-
-
-  list.innerHTML =
-    db.recurring.map(
-      item => `
-
-        <div class="row">
-
-          <div>
-
-            <strong>
-              ${escapeHtml(
-                item.desc
-              )}
-            </strong>
-
-            <small>
-              ${escapeHtml(
-                item.category
-              )}
-            </small>
-
-          </div>
-
-          <strong>
-            ${money(
-              item.value
-            )}
-          </strong>
-
-        </div>
-
-      `
-    ).join("");
-
-}
-
-
-/* =====================================================
-   MÊS
-===================================================== */
-
-function changeMonth(direction){
-
-  currentMonthIndex +=
-    direction;
-
-
-  if(
-    currentMonthIndex > 11
-  ){
-
-    currentMonthIndex = 0;
-
-    currentYear++;
-
-  }
-
-
-  if(
-    currentMonthIndex < 0
-  ){
-
-    currentMonthIndex = 11;
-
-    currentYear--;
-
-  }
-
-
-  save();
-
-}
-
-
-/* =====================================================
-   INICIALIZAÇÃO
-===================================================== */
+localStorage.setItem(
+'personalfin_complete_v1',
+JSON.stringify(db)
+);
 
 render();
 
-setupNavigation();
+cloudSave();
+
+}
+
+function ym(){
+
+return db.year+'-'+
+String(db.month+1).padStart(2,'0');
+
+}
+
+function monthNav(){
+
+return `
+<div class="monthbar">
+
+<button class="secondary"
+onclick="moveMonth(-1)">‹</button>
+
+<strong>
+${fullMonths[db.month]} ${db.year}
+</strong>
+
+<button class="secondary"
+onclick="moveMonth(1)">›</button>
+
+</div>
+`;
+
+}
+
+function moveMonth(x){
+
+db.month+=x;
+
+if(db.month<0){
+
+db.month=11;
+db.year--;
+
+}
+
+if(db.month>11){
+
+db.month=0;
+db.year++;
+
+}
+
+save();
+
+}
+
+function sumInputs(type,m){
+
+return (db.students[type]||[])
+.reduce(
+(s,x)=>s+n(x.values?.[m]),
+0
+);
+
+}
+
+function income(){
+
+return sumInputs('personal',db.month)
++
+sumInputs('consultoria',db.month)
++
+n(db.inputs?.app)
++
+db.entries
+.filter(
+e=>e.ym===ym()&&
+e.type==='entrada'
+)
+.reduce(
+(s,e)=>s+n(e.amount),
+0
+);
+
+}
+
+function fixed(){
+
+return (db.recurring||[])
+.filter(
+r=>r[0]==='Gastos fixos'&&
+r[4]==='Sim'
+)
+.reduce(
+(s,r)=>s+n(r[3]),
+0
+);
+
+}
+
+function cardMonth(which){
+
+return (db.cards[which]||[])
+.filter(
+e=>Array.isArray(e.months)&&
+e.months.includes(ym())
+)
+.reduce(
+(s,e)=>s+n(e.value),
+0
+);
+
+}
+
+function extraOut(){
+
+return db.entries
+.filter(
+e=>e.ym===ym()&&
+e.type==='saida'
+)
+.reduce(
+(s,e)=>s+n(e.amount),
+0
+);
+
+}
+
+function out(){
+
+return fixed()
++
+cardMonth('casa')
++
+cardMonth('pessoal')
++
+extraOut();
+
+}
+
+function tabs(){
+
+const a=[
+['painel','Painel'],
+['entradas','Entradas'],
+['saidas','Saídas'],
+['casa','Cartão Casa'],
+['pessoal','Cartão Pessoal'],
+['recorrentes','Recorrentes'],
+['reserva','Reserva']
+];
+
+document.getElementById('tabs')
+.innerHTML=a.map(x=>`
+
+<button
+class="tab ${tab===x[0]?'active':''}"
+onclick="tab='${x[0]}';render()">
+
+${x[1]}
+
+</button>
+
+`).join('');
+
+}
+
+function panel(){
+
+const inc=income();
+const o=out();
+const bal=inc-o;
+
+const pc=db.students.personal.length;
+const cc=db.students.consultoria.length;
+
+const reserveTotal=
+(db.reserve||[])
+.reduce(
+(s,e)=>s+n(e.value),
+0
+);
+
+return monthNav()+`
+
+<div class="grid">
+
+<div class="card">
+
+<div class="label">Renda</div>
+
+<div class="big green">
+${money(inc)}
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="label">Saídas</div>
+
+<div class="big red">
+${money(o)}
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="label">Saldo planejado</div>
+
+<div class="big ${bal>=0?'green':'red'}">
+${money(bal)}
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="label">
+Reserva acumulada
+</div>
+
+<div class="big gold">
+${money(reserveTotal)}
+</div>
+
+</div>
+
+</div>
+
+<section>
+
+<h2 class="title">
+Personal
+</h2>
+
+<div class="card">
+
+<div style="display:flex;justify-content:space-between">
+
+<strong>
+${pc} / 14
+</strong>
+
+<span class="note">
+Meta atual: 14 alunas — sem limite de cadastro.
+</span>
+
+</div>
+
+<div class="bar" style="margin-top:8px">
+
+<i style="width:${Math.min(100,pc/14*100)}%"></i>
+
+</div>
+
+</div>
+
+</section>
+
+<section>
+
+<h2 class="title">
+Consultoria online
+</h2>
+
+<div class="card">
+
+<div style="display:flex;justify-content:space-between">
+
+<strong>
+${cc} / 20
+</strong>
+
+<span class="note">
+Meta atual: 20 alunos — sem limite de cadastro.
+</span>
+
+</div>
+
+<div class="bar" style="margin-top:8px">
+
+<i style="width:${Math.min(100,cc/20*100)}%"></i>
+
+</div>
+
+</div>
+
+</section>
+
+`;
+
+}
+
+function studentTable(type){
+
+const personal=type==='personal';
+
+const list=db.students[type]||[];
+
+let h=`
+
+<section>
+
+<h2 class="title">
+${personal?'Personal':'Consultoria online'}
+</h2>
+
+<div class="tablewrap">
+
+<table class="table">
+
+<thead>
+
+<tr>
+
+<th>
+${personal?'Aluna':'Aluno'}
+</th>
+
+${months.map(
+m=>`<th>${m}</th>`
+).join('')}
+
+</tr>
+
+</thead>
+
+<tbody>
+
+`;
+
+list.forEach((s,i)=>{
+
+h+=`
+
+<tr>
+
+<td>
+${esc(s.name)}
+</td>
+
+${months.map((_,m)=>`
+
+<td>
+
+<input
+type="number"
+step="0.01"
+min="0"
+value="${n(s.values[m])}"
+onchange="setStudent('${type}',${i},${m},this.value)">
+
+</td>
+
+`).join('')}
+
+</tr>
+
+`;
+
+});
+
+h+=`
+
+<tr class="addStudent">
+
+<td colspan="13">
+
+<button
+type="button"
+onclick="addStudent('${type}')">
+
+＋ Adicionar ${personal?'nova aluna':'novo aluno'}
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+h+=`
+
+<tr class="totalRow">
+
+<td>
+TOTAL ${personal?'PERSONAL':'CONSULTORIA'}
+</td>
+
+${months.map((_,m)=>`
+
+<td>
+
+${money(
+list.reduce(
+(s,x)=>s+n(x.values[m]),
+0
+)
+)}
+
+</td>
+
+`).join('')}
+
+</tr>
+
+`;
+
+return h+`
+
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+`;
+
+}
+
+function addStudent(type){
+
+const name=prompt(
+type==='personal'
+?'Nome da nova aluna:'
+:'Nome do novo aluno:'
+);
+
+if(!name?.trim())return;
+
+db.students[type]
+.push(
+student(name.trim())
+);
+
+save();
+
+}
+
+function setStudent(type,i,m,v){
+
+if(!db.students[type]?.[i])return;
+
+db.students[type][i].values[m]=n(v);
+
+save();
+
+}
+
+function entradas(){
+
+return monthNav()
++
+studentTable('personal')
++
+studentTable('consultoria')
++
+`
+
+<section>
+
+<h2 class="title">
+Aplicativo
+</h2>
+
+<div class="card">
+
+<label>
+Valor recebido no mês
+</label>
+
+<input
+type="number"
+step="0.01"
+min="0"
+value="${n(db.inputs?.app)||''}"
+onchange="db.inputs.app=n(this.value);save()">
+
+</div>
+
+</section>
+
+<section>
+
+<h2 class="title">
+Entradas Extras
+</h2>
+
+<div class="card">
+
+<form
+class="form"
+onsubmit="addExtra(event)">
+
+<div>
+
+<label>
+Data
+</label>
+
+<input
+id="xd"
+type="date"
+required>
+
+</div>
+
+<div>
+
+<label>
+Descrição
+</label>
+
+<input
+id="xdesc"
+required>
+
+</div>
+
+<div>
+
+<label>
+Valor
+</label>
+
+<input
+id="xval"
+type="number"
+step="0.01"
+min="0"
+required>
+
+</div>
+
+<div style="align-self:end">
+
+<button>
+Adicionar entrada
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+<div class="card rows">
+
+${
+db.entries
+.filter(
+e=>e.ym===ym()&&
+e.type==='entrada'
+)
+.map(e=>`
+
+<div class="row">
+
+<div>
+
+${esc(e.desc)}
+
+<small>
+${e.date||''}
+</small>
+
+</div>
+
+<strong class="green">
+${money(e.amount)}
+</strong>
+
+</div>
+
+`).join('')
+
+||
+
+'<span class="note">
+Nenhuma entrada extra neste mês.
+</span>'
+
+}
+
+</div>
+
+</section>
+
+`;
+
+}
+
+function addExtra(e){
+
+e.preventDefault();
+
+const date=
+document.getElementById('xd').value;
+
+const desc=
+document.getElementById('xdesc').value.trim();
+
+const value=
+n(document.getElementById('xval').value);
+
+if(!date||!desc||!value)return;
+
+db.entries.push({
+
+id:id(),
+ym:date.slice(0,7),
+type:'entrada',
+amount:value,
+category:'Entrada Extra',
+form:'Entrada',
+desc,
+date
+
+});
+
+e.target.reset();
+
+save();
+
+}
+
+function saidas(){
+
+const items=
+db.entries.filter(
+e=>e.ym===ym()&&
+e.type==='saida'
+);
+
+return monthNav()+`
+
+<section>
+
+<h2 class="title">
+Saídas
+</h2>
+
+<div class="card">
+
+<form
+class="form"
+onsubmit="addSaida(event)">
+
+<div>
+
+<label>
+Data
+</label>
+
+<input
+id="sd"
+type="date"
+required>
+
+</div>
+
+<div>
+
+<label>
+Descrição
+</label>
+
+<input
+id="sdesc"
+required>
+
+</div>
+
+<div>
+
+<label>
+Valor
+</label>
+
+<input
+id="sval"
+type="number"
+step="0.01"
+min="0"
+required>
+
+</div>
+
+<div>
+
+<label>
+Categoria
+</label>
+
+<select id="scat">
+
+<option>Casa</option>
+<option>Carro</option>
+<option>Moto</option>
+<option>Alimentação</option>
+<option>Saúde</option>
+<option>Lazer</option>
+<option>Compras</option>
+<option>Assinaturas</option>
+<option>Trabalho</option>
+<option>Equipamentos</option>
+<option>Impostos</option>
+<option>Outros</option>
+
+</select>
+
+</div>
+
+<div>
+
+<label>
+Forma
+</label>
+
+<select id="sform">
+
+<option>Pix</option>
+<option>Dinheiro</option>
+
+</select>
+
+</div>
+
+<div style="align-self:end">
+
+<button>
+Adicionar saída
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+<div class="card rows">
+
+${
+items.map(e=>`
+
+<div class="row">
+
+<div>
+
+${esc(e.desc)}
+
+<small>
+${e.date||''} • ${esc(e.category||'')}
+</small>
+
+</div>
+
+<strong class="red">
+${money(e.amount)}
+</strong>
+
+</div>
+
+`).join('')
+
+||
+
+'<span class="note">
+Nenhuma saída neste mês.
+</span>'
+
+}
+
+</div>
+
+</section>
+
+`;
+
+}
+
+function addSaida(e){
+
+e.preventDefault();
+
+const date=
+document.getElementById('sd').value;
+
+const desc=
+document.getElementById('sdesc').value.trim();
+
+const value=
+n(document.getElementById('sval').value);
+
+if(!date||!desc||!value)return;
+
+db.entries.push({
+
+id:id(),
+ym:date.slice(0,7),
+type:'saida',
+amount:value,
+category:document.getElementById('scat').value,
+form:document.getElementById('sform').value,
+desc,
+date
+
+});
+
+e.target.reset();
+
+save();
+
+}
+
+function cardView(which){
+
+const title=
+which==='casa'
+?'Cartão Casa'
+:'Cartão Pessoal';
+
+const p=
+which==='casa'
+?'cc'
+:'cp';
+
+const list=
+db.cards[which]||[];
+
+return monthNav()+`
+
+<section>
+
+<h2 class="title">
+${title}
+</h2>
+
+<div class="card">
+
+<form
+class="form"
+onsubmit="addCard(event,'${which}')">
+
+<div>
+
+<label>
+Descrição
+</label>
+
+<input
+id="${p}desc"
+required>
+
+</div>
+
+<div>
+
+<label>
+Valor da parcela
+</label>
+
+<input
+id="${p}val"
+type="number"
+step="0.01"
+min="0"
+required>
+
+</div>
+
+<div>
+
+<label>
+Primeiro mês
+</label>
+
+<input
+id="${p}month"
+type="month"
+required>
+
+</div>
+
+<div>
+
+<label>
+Nº de parcelas
+</label>
+
+<input
+id="${p}parcelas"
+type="number"
+min="1"
+value="1"
+required>
+
+</div>
+
+<div style="align-self:end">
+
+<button>
+Adicionar compra
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+<div class="card rows">
+
+${
+list.map(c=>`
+
+<div class="row">
+
+<div>
+
+${esc(c.desc)}
+
+<small>
+${c.parcelas||1} parcela(s)
+</small>
+
+</div>
+
+<strong>
+${money(c.value)}
+</strong>
+
+</div>
+
+`).join('')
+
+||
+
+'<span class="note">
+Nenhuma compra cadastrada.
+</span>'
+
+}
+
+</div>
+
+</section>
+
+`;
+
+}
+
+function addCard(e,which){
+
+e.preventDefault();
+
+const p=
+which==='casa'
+?'cc'
+:'cp';
+
+const desc=
+document.getElementById(p+'desc')
+.value.trim();
+
+const value=
+n(document.getElementById(p+'val').value);
+
+const month=
+document.getElementById(p+'month').value;
+
+const parcelas=
+Math.max(
+1,
+parseInt(
+document.getElementById(p+'parcelas').value
+)||1
+);
+
+if(!desc||!value||!month)return;
+
+const y=
+Number(month.slice(0,4));
+
+const m=
+Number(month.slice(5,7))-1;
+
+const monthsList=[];
+
+for(let i=0;i<parcelas;i++){
+
+const d=
+new Date(y,m+i,1);
+
+monthsList.push(
+d.getFullYear()+
+'-'+
+String(
+d.getMonth()+1
+).padStart(2,'0')
+);
+
+}
+
+db.cards[which].push({
+
+id:id(),
+desc,
+value,
+month,
+months:monthsList,
+parcelas
+
+});
+
+e.target.reset();
+
+save();
+
+}
+
+function recorrentes(){
+
+return `
+
+<section>
+
+<h2 class="title">
+Recorrentes
+</h2>
+
+<div class="card rows">
+
+${
+(db.recurring||[])
+.map(r=>`
+
+<div class="row">
+
+<div>
+
+${esc(r[1])}
+
+<small>
+${esc(r[0])} • ${esc(r[5]||'')}
+</small>
+
+</div>
+
+<strong>
+${money(r[3])}
+</strong>
+
+</div>
+
+`).join('')
+
+||
+
+'<span class="note">
+Nenhuma recorrência cadastrada.
+</span>'
+
+}
+
+</div>
+
+</section>
+
+`;
+
+}
+
+function reserva(){
+
+const total=
+(db.reserve||[])
+.reduce(
+(s,e)=>s+n(e.value),
+0
+);
+
+return `
+
+<section>
+
+<h2 class="title">
+Reserva de emergência
+</h2>
+
+<div class="card">
+
+<form
+class="form"
+onsubmit="addReserve(event)">
+
+<div>
+
+<label>
+Valor reservado neste mês
+</label>
+
+<input
+id="rv"
+type="number"
+step="0.01"
+min="0"
+required>
+
+</div>
+
+<div style="align-self:end">
+
+<button>
+Registrar reserva
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+<div class="card">
+
+<strong>
+Total acumulado:
+</strong>
+
+${money(total)}
+
+</div>
+
+</section>
+
+`;
+
+}
+
+function addReserve(e){
+
+e.preventDefault();
+
+const value=
+n(document.getElementById('rv').value);
+
+if(!value)return;
+
+db.reserve.push({
+id:id(),
+ym:ym(),
+value
+});
+
+e.target.reset();
+
+save();
+
+}
+
+function render(){
+
+tabs();
+
+let html='';
+
+if(tab==='painel')html=panel();
+if(tab==='entradas')html=entradas();
+if(tab==='saidas')html=saidas();
+if(tab==='casa')html=cardView('casa');
+if(tab==='pessoal')html=cardView('pessoal');
+if(tab==='recorrentes')html=recorrentes();
+if(tab==='reserva')html=reserva();
+
+document.getElementById('app')
+.innerHTML=html;
+
+}
+
+function openAuth(){
+
+document.getElementById('authBox')
+.hidden=false;
+
+}
+
+function closeAuth(){
+
+document.getElementById('authBox')
+.hidden=true;
+
+}
+
+function authMsg(text){
+
+document.getElementById('authMsg')
+.textContent=text;
+
+}
+
+async function login(){
+
+const email=
+document.getElementById('authEmail')
+.value.trim();
+
+const password=
+document.getElementById('authPassword')
+.value;
+
+if(!email||!password){
+
+authMsg(
+'Preencha e-mail e senha.'
+);
+
+return;
+
+}
+
+authMsg('Entrando...');
+
+const {data,error}=
+await sb.auth.signInWithPassword({
+email,
+password
+});
+
+if(error){
+
+authMsg(error.message);
+
+return;
+
+}
+
+currentUser=data.user;
+
+closeAuth();
+
+await syncFromCloud();
+
+}
+
+async function signup(){
+
+const email=
+document.getElementById('authEmail')
+.value.trim();
+
+const password=
+document.getElementById('authPassword')
+.value;
+
+if(!email||password.length<6){
+
+authMsg(
+'Use um e-mail e uma senha com pelo menos 6 caracteres.'
+);
+
+return;
+
+}
+
+authMsg('Criando acesso...');
+
+const {data,error}=
+await sb.auth.signUp({
+email,
+password
+});
+
+if(error){
+
+authMsg(error.message);
+
+return;
+
+}
+
+if(data.session){
+
+currentUser=data.user;
+
+closeAuth();
+
+await syncFromCloud();
+
+}else{
+
+authMsg(
+'Acesse seu e-mail para confirmar o cadastro. Depois volte aqui e entre com sua senha.'
+);
+
+}
+
+}
+
+async function syncFromCloud(){
+
+if(!currentUser)return;
+
+setSync('sincronizando...');
+
+const {data,error}=
+await sb
+.from('personalfin_data')
+.select('data')
+.eq('user_id',currentUser.id)
+.maybeSingle();
+
+if(error){
+
+console.error(error);
+
+setSync('erro ao sincronizar');
+
+return;
+
+}
+
+if(data?.data){
+
+db=data.data;
+
+localStorage.setItem(
+'personalfin_complete_v1',
+JSON.stringify(db)
+);
+
+render();
+
+setSync('sincronizado');
+
+}else{
+
+await cloudSave();
+
+}
+
+}
+
+async function initAuth(){
+
+const {data}=
+await sb.auth.getSession();
+
+currentUser=
+data.session?.user||null;
+
+if(currentUser){
+
+await syncFromCloud();
+
+}else{
+
+setSync('somente neste aparelho');
+
+openAuth();
+
+}
+
+sb.auth.onAuthStateChange(
+(event,session)=>{
+
+if(event==='SIGNED_OUT'){
+
+currentUser=null;
+
+setSync('somente neste aparelho');
+
+openAuth();
+
+}
+
+}
+);
+
+}
+
+render();
+
+initAuth();
 
 </script>
-
 </body>
 </html>
