@@ -1,39 +1,2283 @@
-create table if not exists public.personalfin_data (
-  user_id uuid primary key references auth.users(id) on delete cascade,
-  data jsonb not null default '{}'::jsonb,
-  updated_at timestamptz not null default now()
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#7a1838">
+<link rel="manifest" href="manifest.json">
+<title>PersonalFin</title>
+
+<style>
+:root{
+--wine:#7a1838;
+--wine2:#9d2851;
+--bg:#f7f4f5;
+--card:#fff;
+--txt:#272126;
+--muted:#777078;
+--line:#eadfe4;
+--green:#287a58;
+--red:#b52a2a;
+--gold:#a86d14
+}
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+background:var(--bg);
+color:var(--txt);
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif
+}
+
+header{
+background:linear-gradient(135deg,var(--wine),var(--wine2));
+color:#fff;
+padding:18px 16px 15px;
+position:sticky;
+top:0;
+z-index:20;
+box-shadow:0 3px 15px #0002
+}
+
+header h1{
+margin:0;
+font-size:23px
+}
+
+header p{
+margin:3px 0 0;
+font-size:12px;
+opacity:.86
+}
+
+.wrap{
+max-width:1100px;
+margin:auto;
+padding:14px 12px 90px
+}
+
+.tabs{
+display:flex;
+gap:7px;
+overflow:auto;
+padding:2px 0 12px;
+position:sticky;
+top:68px;
+background:var(--bg);
+z-index:10
+}
+
+.tabs button{
+white-space:nowrap
+}
+
+.tab{
+border:0;
+border-radius:11px;
+padding:9px 12px;
+background:#eee5e8;
+color:var(--wine);
+font-weight:700
+}
+
+.tab.active{
+background:var(--wine);
+color:#fff
+}
+
+.monthbar{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin:0 0 12px
+}
+
+.monthbar button{
+width:42px
+}
+
+.monthbar strong{
+text-transform:capitalize
+}
+
+.grid,.kpis{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px
+}
+
+.card{
+background:var(--card);
+border:1px solid var(--line);
+border-radius:17px;
+padding:14px;
+box-shadow:0 2px 10px #00000008
+}
+
+.label{
+font-size:11px;
+color:var(--muted)
+}
+
+.big{
+font-size:21px;
+font-weight:800;
+margin-top:4px
+}
+
+.green{color:var(--green)}
+.red{color:var(--red)}
+.gold{color:var(--gold)}
+
+section{
+margin-top:13px
+}
+
+.title{
+font-size:16px;
+font-weight:800;
+margin:0 0 8px
+}
+
+.tablewrap{
+overflow:auto;
+border:1px solid var(--line);
+border-radius:14px;
+background:#fff
+}
+
+.table{
+border-collapse:collapse;
+width:100%;
+min-width:760px;
+font-size:13px
+}
+
+.table th,
+.table td{
+padding:8px;
+border-bottom:1px solid var(--line);
+text-align:right;
+white-space:nowrap
+}
+
+.table th:first-child,
+.table td:first-child{
+text-align:left;
+position:sticky;
+left:0;
+background:#fff
+}
+
+.table th{
+background:#f4ecef;
+color:var(--wine)
+}
+
+.table input{
+width:90px;
+padding:7px;
+border:1px solid var(--line);
+border-radius:8px;
+text-align:right
+}
+
+.form{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:9px
+}
+
+label{
+font-size:11px;
+color:var(--muted);
+display:block;
+margin-bottom:4px
+}
+
+input,select{
+width:100%;
+padding:10px;
+border:1px solid var(--line);
+border-radius:10px;
+background:#fff;
+font:inherit
+}
+
+button{
+border:0;
+border-radius:11px;
+padding:10px 13px;
+background:var(--wine);
+color:#fff;
+font-weight:750;
+cursor:pointer
+}
+
+.secondary{
+background:#eee5e8;
+color:var(--wine)
+}
+
+.note{
+font-size:12px;
+color:var(--muted);
+line-height:1.45
+}
+
+.rows .row{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px 0;
+border-bottom:1px solid var(--line)
+}
+
+.rows .row:last-child{
+border:0
+}
+
+.rows small{
+display:block;
+color:var(--muted);
+margin-top:2px
+}
+
+.addStudent td{
+background:#fffafb!important
+}
+
+.addStudent button{
+width:100%;
+text-align:left;
+background:#fff;
+color:var(--wine);
+border:1px dashed #c99aa8;
+font-weight:800
+}
+
+.totalRow td{
+font-weight:800;
+background:#faf6f7;
+color:var(--wine)
+}
+
+.sync{
+font-size:11px;
+margin-left:7px
+}
+
+#authBox{
+position:fixed;
+inset:0;
+background:#0008;
+z-index:999;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:18px
+}
+
+#authBox[hidden]{
+display:none
+}
+
+.authCard{
+width:min(420px,100%);
+background:#fff;
+border-radius:18px;
+padding:22px;
+box-shadow:0 15px 50px #0005
+}
+
+.authCard h2{
+margin:0 0 7px
+}
+
+.authCard p{
+font-size:13px;
+color:var(--muted);
+line-height:1.45
+}
+
+.authCard input{
+margin-bottom:10px
+}
+
+.authBtns{
+display:flex;
+gap:8px;
+flex-wrap:wrap
+}
+
+.authMsg{
+font-size:12px;
+color:var(--wine);
+margin-top:10px
+}
+
+@media(max-width:760px){
+
+.grid,.kpis{
+grid-template-columns:repeat(2,1fr)
+}
+
+.form{
+grid-template-columns:1fr 1fr
+}
+
+.tabs{
+top:62px
+}
+
+}
+
+@media(max-width:480px){
+
+.form{
+grid-template-columns:1fr
+}
+
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>PersonalFin</h1>
+
+<p>
+Controle financeiro pessoal
+<span class="sync" id="syncStatus">
+• somente neste aparelho
+</span>
+
+<button
+onclick="openAuth()"
+style="font-size:10px;padding:5px 8px;margin-left:5px">
+☁️ Sincronizar
+</button>
+
+</p>
+
+</header>
+
+<div id="authBox" hidden>
+
+<div class="authCard">
+
+<h2>Sincronizar PersonalFin</h2>
+
+<p>
+Use o mesmo e-mail e senha no computador e no celular.
+</p>
+
+<label>E-mail</label>
+
+<input
+id="authEmail"
+type="email"
+autocomplete="email"
+placeholder="seu@email.com">
+
+<label>Senha</label>
+
+<input
+id="authPassword"
+type="password"
+autocomplete="current-password"
+placeholder="mínimo de 6 caracteres">
+
+<div class="authBtns">
+
+<button onclick="login()">
+Entrar
+</button>
+
+<button
+class="secondary"
+onclick="signup()">
+Criar acesso
+</button>
+
+<button
+class="secondary"
+onclick="closeAuth()">
+Agora não
+</button>
+
+</div>
+
+<div
+id="authMsg"
+class="authMsg">
+</div>
+
+</div>
+
+</div>
+
+<div class="wrap">
+
+<nav
+class="tabs"
+id="tabs">
+</nav>
+
+<div id="app"></div>
+
+</div>
+
+<script>
+
+const SUPABASE_URL=
+'https://igsljwivdwfrwxhewewi.supabase.co';
+
+const SUPABASE_KEY=
+'sb_publishable_ZLvwvOSfy7Y3H_Vd_jhYXg_I9SzyJrw';
+
+const sb=
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
 );
 
-alter table public.personalfin_data enable row level security;
+let currentUser=null;
 
-drop policy if exists "PersonalFin select own data"
-on public.personalfin_data;
+const months=[
+'Jan','Fev','Mar','Abr','Mai','Jun',
+'Jul','Ago','Set','Out','Nov','Dez'
+];
 
-drop policy if exists "PersonalFin insert own data"
-on public.personalfin_data;
+const fullMonths=[
+'Janeiro','Fevereiro','Março','Abril',
+'Maio','Junho','Julho','Agosto',
+'Setembro','Outubro','Novembro','Dezembro'
+];
 
-drop policy if exists "PersonalFin update own data"
-on public.personalfin_data;
+const money=v=>
+new Intl.NumberFormat(
+'pt-BR',
+{
+style:'currency',
+currency:'BRL'
+}
+).format(Number(v)||0);
 
-create policy "PersonalFin select own data"
-on public.personalfin_data
-for select
-to authenticated
-using (auth.uid() = user_id);
+const n=v=>Number(v)||0;
 
-create policy "PersonalFin insert own data"
-on public.personalfin_data
-for insert
-to authenticated
-with check (auth.uid() = user_id);
+const id=()=>
+Date.now()+Math.random();
 
-create policy "PersonalFin update own data"
-on public.personalfin_data
-for update
-to authenticated
-using (auth.uid() = user_id)
-with check (auth.uid() = user_id);
+const esc=s=>
+String(s??'')
+.replaceAll('&','&amp;')
+.replaceAll('<','&lt;')
+.replaceAll('>','&gt;')
+.replaceAll('"','&quot;')
+.replaceAll("'","&#039;");
 
-grant select, insert, update
-on public.personalfin_data
-to authenticated;
+function student(name){
+
+return {
+id:id(),
+name,
+values:Array(12).fill(0)
+};
+
+}
+
+const defaultPersonal=[
+'Juliana',
+'João',
+'Rafa',
+'Pri e Isa',
+'Neuza',
+'Dani',
+'Giovanna',
+'Ana Velasco',
+'Luís Lunguinho'
+];
+
+const defaultConsultoria=[];
+
+const initial={
+
+year:new Date().getFullYear(),
+
+month:new Date().getMonth(),
+
+entries:[],
+
+cards:{
+casa:[],
+pessoal:[]
+},
+
+recurring:[],
+
+reserve:[],
+
+inputs:{
+personal:defaultPersonal.map(student),
+consultoria:defaultConsultoria.map(student),
+app:0
+}
+
+};
+
+function load(){
+
+try{
+
+const raw=
+JSON.parse(
+localStorage.getItem(
+'personalfin_complete_v1'
+)||'null'
+);
+
+if(!raw)
+return initial;
+
+if(!raw.inputs)
+raw.inputs={
+personal:[],
+consultoria:[],
+app:0
+};
+
+if(!Array.isArray(raw.inputs.personal))
+raw.inputs.personal=[];
+
+if(!Array.isArray(raw.inputs.consultoria))
+raw.inputs.consultoria=[];
+
+raw.inputs.personal=
+raw.inputs.personal.map(
+x=>typeof x==='string'
+?student(x)
+:x
+);
+
+raw.inputs.consultoria=
+raw.inputs.consultoria.map(
+x=>typeof x==='string'
+?student(x)
+:x
+);
+
+raw.entries=raw.entries||[];
+
+raw.cards=raw.cards||{
+casa:[],
+pessoal:[]
+};
+
+raw.cards.casa=
+raw.cards.casa||[];
+
+raw.cards.pessoal=
+raw.cards.pessoal||[];
+
+raw.recurring=
+raw.recurring||[];
+
+raw.reserve=
+raw.reserve||[];
+
+return raw;
+
+}catch(e){
+
+return initial;
+
+}
+
+}
+
+let db=load();
+
+let tab='painel';
+
+function setSync(t){
+
+const el=
+document.getElementById(
+'syncStatus'
+);
+
+if(el)
+el.textContent='• '+t;
+
+}
+
+function openAuth(){
+
+document.getElementById(
+'authBox'
+).hidden=false;
+
+}
+
+function closeAuth(){
+
+document.getElementById(
+'authBox'
+).hidden=true;
+
+}
+
+function authMsg(t){
+
+document.getElementById(
+'authMsg'
+).textContent=t;
+
+}
+
+async function cloudSave(){
+
+if(!currentUser)
+return;
+
+const r=
+await sb
+.from('personalfin_data')
+.upsert(
+{
+user_id:currentUser.id,
+data:db,
+updated_at:new Date().toISOString()
+},
+{
+onConflict:'user_id'
+}
+);
+
+if(r.error){
+
+console.error(r.error);
+
+setSync('erro na nuvem');
+
+}
+
+}
+
+async function syncFromCloud(){
+
+if(!currentUser)
+return;
+
+setSync('sincronizando...');
+
+const r=
+await sb
+.from('personalfin_data')
+.select('data')
+.eq(
+'user_id',
+currentUser.id
+)
+.maybeSingle();
+
+if(r.error){
+
+console.error(r.error);
+
+setSync('erro na nuvem');
+
+return;
+
+}
+
+if(
+r.data &&
+r.data.data
+){
+
+db=r.data.data;
+
+localStorage.setItem(
+'personalfin_complete_v1',
+JSON.stringify(db)
+);
+
+render();
+
+}else{
+
+await cloudSave();
+
+}
+
+setSync('sincronizado');
+
+}
+
+async function login(){
+
+const email=
+document.getElementById(
+'authEmail'
+).value.trim();
+
+const password=
+document.getElementById(
+'authPassword'
+).value;
+
+if(!email||!password){
+
+authMsg(
+'Preencha e-mail e senha.'
+);
+
+return;
+
+}
+
+authMsg('Entrando...');
+
+const r=
+await sb.auth.signInWithPassword({
+email,
+password
+});
+
+if(r.error){
+
+authMsg(
+r.error.message
+);
+
+return;
+
+}
+
+currentUser=
+r.data.user;
+
+closeAuth();
+
+await syncFromCloud();
+
+}
+
+async function signup(){
+
+const email=
+document.getElementById(
+'authEmail'
+).value.trim();
+
+const password=
+document.getElementById(
+'authPassword'
+).value;
+
+if(password.length<6){
+
+authMsg(
+'A senha precisa ter pelo menos 6 caracteres.'
+);
+
+return;
+
+}
+
+authMsg('Criando acesso...');
+
+const r=
+await sb.auth.signUp({
+email,
+password
+});
+
+if(r.error){
+
+authMsg(
+r.error.message
+);
+
+return;
+
+}
+
+if(r.data.session){
+
+currentUser=
+r.data.user;
+
+closeAuth();
+
+await syncFromCloud();
+
+}else{
+
+authMsg(
+'Confira seu e-mail para confirmar o cadastro.'
+);
+
+}
+
+}
+
+function save(){
+
+localStorage.setItem(
+'personalfin_complete_v1',
+JSON.stringify(db)
+);
+
+if(currentUser)
+cloudSave();
+
+render();
+
+}
+
+function ym(){
+
+return db.year+
+'-'+
+String(
+db.month+1
+).padStart(2,'0');
+
+}
+
+function monthNav(){
+
+return `
+
+<div class="monthbar">
+
+<button
+class="secondary"
+onclick="moveMonth(-1)">
+‹
+</button>
+
+<strong>
+${fullMonths[db.month]} ${db.year}
+</strong>
+
+<button
+class="secondary"
+onclick="moveMonth(1)">
+›
+</button>
+
+</div>
+
+`;
+
+}
+
+function moveMonth(x){
+
+db.month+=x;
+
+if(db.month<0){
+
+db.month=11;
+db.year--;
+
+}
+
+if(db.month>11){
+
+db.month=0;
+db.year++;
+
+}
+
+save();
+
+}
+
+function sumInputs(type,m){
+
+return (db.inputs[type]||[])
+.reduce(
+(s,x)=>
+s+n(
+x.values?.[m]
+),
+0
+);
+
+}
+
+function income(){
+
+return (
+
+sumInputs(
+'personal',
+db.month
+)
+
++
+
+sumInputs(
+'consultoria',
+db.month
+)
+
++
+
+n(db.inputs?.app)
+
++
+
+db.entries
+.filter(
+e=>
+e.ym===ym() &&
+e.type==='entrada'
+)
+.reduce(
+(s,e)=>
+s+n(e.amount),
+0
+)
+
+);
+
+}
+
+function fixed(){
+
+return (db.recurring||[])
+.filter(
+r=>
+Array.isArray(r) &&
+r[4]==='Sim'
+)
+.reduce(
+(s,r)=>
+s+n(r[3]),
+0
+);
+
+}
+
+function cardMonth(which){
+
+return (db.cards[which]||[])
+.filter(
+e=>
+Array.isArray(e.months) &&
+e.months.includes(ym())
+)
+.reduce(
+(s,e)=>
+s+n(e.value),
+0
+);
+
+}
+
+function extraOut(){
+
+return db.entries
+.filter(
+e=>
+e.ym===ym() &&
+e.type==='saida'
+)
+.reduce(
+(s,e)=>
+s+n(e.amount),
+0
+);
+
+}
+
+function out(){
+
+return (
+fixed()
++
+cardMonth('casa')
++
+cardMonth('pessoal')
++
+extraOut()
+);
+
+}
+
+function tabs(){
+
+const a=[
+['painel','Painel'],
+['entradas','Entradas'],
+['saidas','Saídas'],
+['casa','Cartão Casa'],
+['pessoal','Cartão Pessoal'],
+['recorrentes','Recorrentes'],
+['reserva','Reserva']
+];
+
+document.getElementById(
+'tabs'
+).innerHTML=
+a.map(
+x=>
+`<button class="tab ${
+tab===x[0]?'active':''
+}"
+onclick="tab='${x[0]}';render()">
+${x[1]}
+</button>`
+).join('');
+
+}
+
+function panel(){
+
+const inc=income();
+
+const o=out();
+
+const bal=Math.max(
+0,
+inc-o
+);
+
+const pc=
+db.inputs.personal.length;
+
+const cc=
+db.inputs.consultoria.length;
+
+const reserva=
+(db.reserve||[])
+.reduce(
+(s,e)=>s+n(e.value),
+0
+);
+
+return (
+
+monthNav()+
+
+`<div class="grid">
+
+<div class="card">
+
+<div class="label">
+Renda
+</div>
+
+<div class="big green">
+${money(inc)}
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="label">
+Saídas
+</div>
+
+<div class="big red">
+${money(o)}
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="label">
+Disponível
+</div>
+
+<div class="big green">
+${money(bal)}
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="label">
+Reserva acumulada
+</div>
+
+<div class="big gold">
+${money(reserva)}
+</div>
+
+</div>
+
+</div>
+
+<section>
+
+<h2 class="title">
+Personal
+</h2>
+
+<div class="card">
+
+<div style="display:flex;justify-content:space-between">
+
+<strong>
+${pc}
+</strong>
+
+<span class="note">
+Alunas cadastradas
+</span>
+
+</div>
+
+</div>
+
+</section>
+
+<section>
+
+<h2 class="title">
+Consultoria online
+</h2>
+
+<div class="card">
+
+<div style="display:flex;justify-content:space-between">
+
+<strong>
+${cc}
+</strong>
+
+<span class="note">
+Alunos cadastrados
+</span>
+
+</div>
+
+</div>
+
+</section>`
+
+);
+
+}
+
+function studentTable(type){
+
+const personal=
+type==='personal';
+
+const list=
+db.inputs[type]||[];
+
+let h=`
+
+<section>
+
+<h2 class="title">
+${personal?'Personal':'Consultoria online'}
+</h2>
+
+<div class="tablewrap">
+
+<table class="table">
+
+<thead>
+
+<tr>
+
+<th>
+${personal?'Aluna':'Aluno'}
+</th>
+
+${months.map(
+m=>`<th>${m}</th>`
+).join('')}
+
+</tr>
+
+</thead>
+
+<tbody>
+
+`;
+
+list.forEach(
+(s,i)=>{
+
+h+=`
+
+<tr>
+
+<td>
+${esc(s.name)}
+</td>
+
+${months.map(
+(_,m)=>
+`
+
+<td>
+
+<input
+type="number"
+step="0.01"
+min="0"
+value="${n(s.values?.[m])}"
+onchange="setStudent(
+'${type}',
+${i},
+${m},
+this.value
+)">
+
+</td>
+
+`
+).join('')}
+
+</tr>
+
+`;
+
+}
+);
+
+h+=`
+
+<tr class="addStudent">
+
+<td colspan="13">
+
+<button
+type="button"
+onclick="addStudent('${type}')">
+
+＋ Adicionar ${
+personal
+?'nova aluna'
+:'novo aluno'
+}
+
+</button>
+
+</td>
+
+</tr>
+
+<tr class="totalRow">
+
+<td>
+TOTAL
+</td>
+
+${months.map(
+(_,m)=>
+`<td>${money(
+list.reduce(
+(s,x)=>
+s+n(x.values?.[m]),
+0
+)
+)}</td>`
+).join('')}
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+`;
+
+return h;
+
+}
+
+function addStudent(type){
+
+const name=
+prompt(
+type==='personal'
+?'Nome da nova aluna:'
+:'Nome do novo aluno:'
+);
+
+if(!name?.trim())
+return;
+
+db.inputs[type].push(
+student(name.trim())
+);
+
+save();
+
+}
+
+function setStudent(
+type,
+i,
+m,
+v
+){
+
+if(
+!db.inputs[type]?.[i]
+)
+return;
+
+db.inputs[type][i]
+.values[m]=n(v);
+
+save();
+
+}
+
+function entradas(){
+
+return (
+
+monthNav()+
+
+studentTable('personal')+
+
+studentTable('consultoria')+
+
+`
+
+<section>
+
+<h2 class="title">
+Aplicativo
+</h2>
+
+<div class="card">
+
+<label>
+Valor recebido no mês
+</label>
+
+<input
+type="number"
+step="0.01"
+min="0"
+value="${n(db.inputs?.app)}"
+onchange="
+db.inputs.app=n(this.value);
+save()
+">
+
+</div>
+
+</section>
+
+<section>
+
+<h2 class="title">
+Entradas Extras
+</h2>
+
+<div class="card">
+
+<form
+class="form"
+onsubmit="addExtra(event)">
+
+<div>
+
+<label>
+Data
+</label>
+
+<input
+id="xd"
+type="date"
+required>
+
+</div>
+
+<div>
+
+<label>
+Descrição
+</label>
+
+<input
+id="xdesc"
+required>
+
+</div>
+
+<div>
+
+<label>
+Valor
+</label>
+
+<input
+id="xval"
+type="number"
+step="0.01"
+min="0"
+required>
+
+</div>
+
+<div style="align-self:end">
+
+<button>
+Adicionar entrada
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+<div class="card rows">
+
+${
+db.entries
+.filter(
+e=>
+e.ym===ym() &&
+e.type==='entrada'
+)
+.map(
+e=>
+`
+
+<div class="row">
+
+<div>
+
+${esc(e.desc)}
+
+<small>
+${e.date||''}
+</small>
+
+</div>
+
+<strong class="green">
+${money(e.amount)}
+</strong>
+
+</div>
+
+`
+)
+.join('')
+
+||
+
+'<span class="note">Nenhuma entrada extra neste mês.</span>'
+
+}
+
+</div>
+
+</section>
+
+`
+
+);
+
+}
+
+function addExtra(e){
+
+e.preventDefault();
+
+const date=
+document.getElementById('xd')
+.value;
+
+const desc=
+document.getElementById('xdesc')
+.value.trim();
+
+const value=
+n(
+document.getElementById('xval')
+.value
+);
+
+if(!date||!desc||!value)
+return;
+
+db.entries.push({
+
+id:id(),
+
+ym:date.slice(0,7),
+
+type:'entrada',
+
+amount:value,
+
+category:'Entrada Extra',
+
+desc,
+
+date
+
+});
+
+e.target.reset();
+
+save();
+
+}
+
+function saidas(){
+
+return (
+
+monthNav()+
+
+`
+
+<section>
+
+<h2 class="title">
+Saídas
+</h2>
+
+<div class="card">
+
+<form
+class="form"
+onsubmit="addSaida(event)">
+
+<div>
+
+<label>
+Data
+</label>
+
+<input
+id="sd"
+type="date"
+required>
+
+</div>
+
+<div>
+
+<label>
+Descrição
+</label>
+
+<input
+id="sdesc"
+required>
+
+</div>
+
+<div>
+
+<label>
+Valor
+</label>
+
+<input
+id="sval"
+type="number"
+step="0.01"
+min="0"
+required>
+
+</div>
+
+<div>
+
+<label>
+Categoria
+</label>
+
+<select id="scat">
+
+<option>
+Casa
+</option>
+
+<option>
+Carro
+</option>
+
+<option>
+Moto
+</option>
+
+<option>
+Alimentação
+</option>
+
+<option>
+Saúde
+</option>
+
+<option>
+Lazer
+</option>
+
+<option>
+Compras
+</option>
+
+<option>
+Assinaturas
+</option>
+
+<option>
+Trabalho
+</option>
+
+<option>
+Equipamentos
+</option>
+
+<option>
+Impostos
+</option>
+
+<option>
+Outros
+</option>
+
+</select>
+
+</div>
+
+<div>
+
+<label>
+Forma
+</label>
+
+<select id="sform">
+
+<option>
+Pix
+</option>
+
+<option>
+Dinheiro
+</option>
+
+<option>
+Cartão Casa
+</option>
+
+<option>
+Cartão Pessoal
+</option>
+
+</select>
+
+</div>
+
+<div style="align-self:end">
+
+<button>
+Adicionar saída
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+<div class="card rows">
+
+${
+db.entries
+.filter(
+e=>
+e.ym===ym() &&
+e.type==='saida'
+)
+.map(
+e=>
+`
+
+<div class="row">
+
+<div>
+
+${esc(e.desc)}
+
+<small>
+${e.date||''} •
+${esc(e.category||'')}
+</small>
+
+</div>
+
+<strong class="red">
+${money(e.amount)}
+</strong>
+
+</div>
+
+`
+)
+.join('')
+
+||
+
+'<span class="note">Nenhuma saída neste mês.</span>'
+
+}
+
+</div>
+
+</section>
+
+`
+
+);
+
+}
+
+function addSaida(e){
+
+e.preventDefault();
+
+const date=
+document.getElementById('sd')
+.value;
+
+const desc=
+document.getElementById('sdesc')
+.value.trim();
+
+const value=
+n(
+document.getElementById('sval')
+.value
+);
+
+if(!date||!desc||!value)
+return;
+
+db.entries.push({
+
+id:id(),
+
+ym:date.slice(0,7),
+
+type:'saida',
+
+amount:value,
+
+category:
+document.getElementById('scat')
+.value,
+
+form:
+document.getElementById('sform')
+.value,
+
+desc,
+
+date
+
+});
+
+e.target.reset();
+
+save();
+
+}
+
+function cardView(which){
+
+const title=
+which==='casa'
+?'Cartão Casa'
+:'Cartão Pessoal';
+
+const p=
+which==='casa'
+?'cc'
+:'cp';
+
+const list=
+db.cards[which]||[];
+
+return (
+
+monthNav()+
+
+`
+
+<section>
+
+<h2 class="title">
+${title}
+</h2>
+
+<div class="card">
+
+<form
+class="form"
+onsubmit="addCard(event,'${which}')">
+
+<div>
+
+<label>
+Descrição
+</label>
+
+<input
+id="${p}desc"
+required>
+
+</div>
+
+<div>
+
+<label>
+Valor da parcela
+</label>
+
+<input
+id="${p}val"
+type="number"
+step="0.01"
+min="0"
+required>
+
+</div>
+
+<div>
+
+<label>
+Primeiro mês
+</label>
+
+<input
+id="${p}month"
+type="month"
+required>
+
+</div>
+
+<div>
+
+<label>
+Nº de parcelas
+</label>
+
+<input
+id="${p}parcelas"
+type="number"
+min="1"
+value="1"
+required>
+
+</div>
+
+<div style="align-self:end">
+
+<button>
+Adicionar compra
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+<div class="card rows">
+
+${
+list.map(
+c=>
+`
+
+<div class="row">
+
+<div>
+
+${esc(c.desc)}
+
+<small>
+${c.parcelas||1}
+parcela(s)
+</small>
+
+</div>
+
+<strong>
+${money(c.value)}
+</strong>
+
+</div>
+
+`
+).join('')
+
+||
+
+'<span class="note">Nenhuma compra cadastrada.</span>'
+
+}
+
+</div>
+
+</section>
+
+`
+
+);
+
+}
+
+function addCard(e,which){
+
+e.preventDefault();
+
+const p=
+which==='casa'
+?'cc'
+:'cp';
+
+const desc=
+document.getElementById(
+p+'desc'
+).value.trim();
+
+const value=
+n(
+document.getElementById(
+p+'val'
+).value
+);
+
+const month=
+document.getElementById(
+p+'month'
+).value;
+
+const parcelas=
+Math.max(
+1,
+parseInt(
+document.getElementById(
+p+'parcelas'
+).value
+)||1
+);
+
+if(!desc||!value||!month)
+return;
+
+const y=
+Number(month.slice(0,4));
+
+const m=
+Number(month.slice(5,7))-1;
+
+const monthsList=[];
+
+for(
+let i=0;
+i<parcelas;
+i++
+){
+
+const d=
+new Date(
+y,
+m+i,
+1
+);
+
+monthsList.push(
+d.getFullYear()+
+'-'+
+String(
+d.getMonth()+1
+).padStart(2,'0')
+);
+
+}
+
+db.cards[which].push({
+
+id:id(),
+
+desc,
+
+value,
+
+month,
+
+months:monthsList,
+
+parcelas
+
+});
+
+e.target.reset();
+
+save();
+
+}
+
+function recorrentes(){
+
+return `
+
+<section>
+
+<h2 class="title">
+Recorrentes
+</h2>
+
+<div class="card rows">
+
+${
+(db.recurring||[])
+.map(
+r=>
+`
+
+<div class="row">
+
+<div>
+
+${esc(r[1]||'')}
+
+<small>
+${esc(r[0]||'')}
+•
+${esc(r[5]||'')}
+</small>
+
+</div>
+
+<strong>
+${money(r[3])}
+</strong>
+
+</div>
+
+`
+)
+.join('')
+
+||
+
+'<span class="note">Nenhuma recorrência cadastrada.</span>'
+
+}
+
+</div>
+
+</section>
+
+`;
+
+}
+
+function reserva(){
+
+const total=
+(db.reserve||[])
+.reduce(
+(s,e)=>
+s+n(e.value),
+0
+);
+
+return `
+
+<section>
+
+<h2 class="title">
+Reserva de emergência
+</h2>
+
+<div class="card">
+
+<form
+class="form"
+onsubmit="addReserve(event)">
+
+<div>
+
+<label>
+Valor reservado neste mês
+</label>
+
+<input
+id="rv"
+type="number"
+step="0.01"
+min="0"
+required>
+
+</div>
+
+<div style="align-self:end">
+
+<button>
+Registrar reserva
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+<div class="card">
+
+<strong>
+Total acumulado:
+</strong>
+
+${money(total)}
+
+</div>
+
+</section>
+
+`;
+
+}
+
+function addReserve(e){
+
+e.preventDefault();
+
+const value=
+n(
+document.getElementById('rv')
+.value
+);
+
+if(!value)
+return;
+
+db.reserve.push({
+
+id:id(),
+
+ym:ym(),
+
+value
+
+});
+
+e.target.reset();
+
+save();
+
+}
+
+function render(){
+
+tabs();
+
+let html='';
+
+if(tab==='painel')
+html=panel();
+
+if(tab==='entradas')
+html=entradas();
+
+if(tab==='saidas')
+html=saidas();
+
+if(tab==='casa')
+html=cardView('casa');
+
+if(tab==='pessoal')
+html=cardView('pessoal');
+
+if(tab==='recorrentes')
+html=recorrentes();
+
+if(tab==='reserva')
+html=reserva();
+
+document.getElementById(
+'app'
+).innerHTML=html;
+
+}
+
+render();
+
+sb.auth.getSession()
+.then(
+async r=>{
+
+currentUser=
+r.data.session?.user||null;
+
+if(currentUser)
+await syncFromCloud();
+
+}
+);
+
+sb.auth.onAuthStateChange(
+(event,session)=>{
+
+if(
+event==='SIGNED_IN' &&
+session?.user
+){
+
+currentUser=
+session.user;
+
+syncFromCloud();
+
+}
+
+if(event==='SIGNED_OUT'){
+
+currentUser=null;
+
+setSync(
+'somente neste aparelho'
+);
+
+}
+
+}
+);
+
+</script>
+
+</body>
+</html>
